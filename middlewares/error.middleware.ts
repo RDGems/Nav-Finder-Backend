@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
+import { ApiError } from "../utils/error/Apierror"
 import { NextFunction, Request, Response } from "express";
-import { ApiError } from "../utils/error/Apierror";
 require("dotenv").config()
 
 export interface myError extends Error {
     statusCode?: number;
     errors?: any[];
 }
+
 
 const errorHandler = (err: myError, req: Request, res: Response, next: NextFunction) => {
     console.log('Error received:', err); // Log the error received

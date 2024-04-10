@@ -12,6 +12,7 @@ import { errorHandler } from "./middlewares/error.middleware"
 const cors = require('cors');
 
 // route imports
+import { authRoutes } from './routes/auth/auth.routes';
 
 // app imports
 
@@ -47,7 +48,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookiParser());
 
 
-
+// route path setup
+app.use('/api/v1/auth', authRoutes);
 
 
 // server setup
@@ -67,3 +69,4 @@ const start = async () => {
     }
 }
 start();
+app.use(errorHandler);
