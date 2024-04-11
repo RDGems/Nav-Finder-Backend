@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { AccountType, Gender, AccountStatus, SecurityQuestions } from '../../utils/constants/model.constants';
+import { AccountType, Gender, AccountStatus, SecurityQuestions } from '../../utils/common/model.constants';
 const validator = require("validator");
 import Jwt from "jsonwebtoken"
 const bcrypt = require("bcryptjs");
