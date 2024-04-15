@@ -33,11 +33,12 @@ const generateAccessRefreshToken = async (userId: any) => {
 const register = asyncHandler(async (req: Request, res: Response) => {
     // data from request body
     let { userName, email, password } = req.body
-    userName = userName.replace(/\s/g, '');
     // validate data presence in DB
     if (!userName || !email || !password) {
         throw new ApiError(400, "Please provide all the required fields", []);
     };
+    userName = userName.replace(/\s/g, '');
+
     // check if user already exists
     const isExistingUser = await User.findOne({ $or: [{ email }, { userName }] });
     if (isExistingUser) throw new ApiError(409, "User already exists");
@@ -83,7 +84,7 @@ const login = asyncHandler(async (req: Request, res: Response) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "PROD" ? true : false,
     };
-    const userDetails = await User.findById(isExistingUser._id).select("userName email accountType AccountStatus isOnboarded _id avatar ");
+    const userDetails = await User.findById(isExistingUser._id).select("userName email accountType AccountStatus isOnboarded  avatar ");
     // send response
     return res.status(200).cookie("refreshToken", refreshToken, refreshOptions).
         cookie("accessToken", accessToken, accessOptions).json(new ApiResponse(200, userDetails, "Login Successful"));
@@ -93,7 +94,8 @@ const logout = asyncHandler(async (req: AuthRequest, res: Response) => {
     if (!req.user?.id) {
         throw new ApiError(401, "Unauthorized access", []);
     }
-    await User.findByIdAndUpdate(req.user.id, { refreshToken: "" }, { new: true });
+    const userNotPresent = await User.findByIdAndUpdate(req.user?.id, { refreshToken: "" }, { new: true });
+    if (!userNotPresent) throw new ApiError(404, "User not found", []);
     const options = {
         expires: new Date(Date.now()),
         httpOnly: true,
@@ -106,9 +108,34 @@ const logout = asyncHandler(async (req: AuthRequest, res: Response) => {
             success: true,
             message: "Successfully logged out.",
         });
-
-})
-
+});
 
 
-export { generateAccessRefreshToken, register, login, logout };
+// Onboarding process for user
+const onboarding = asyncHandler(async (req: AuthRequest, res: Response) => {
+    const data: Record<string, any> = { ...req.body };
+    // Get the schema keys from the User model
+    const schemaKeys = Object.keys(User.schema.paths);
+
+    // Filter the data to only include keys that exist in the User schema
+
+    const filteredData: Record<string, any> = Object.keys(data)
+        .filter(key => schemaKeys.includes(key))
+        .reduce((obj: Record<string, any>, key) => {
+            obj[key] = data[key];
+            return obj;
+        }, {});
+
+    // save in Db
+    const onboarderUser = await User.findByIdAndUpdate(req.user?.id, { ...filteredData, isOnboarded: true }, { new: true });
+    // Check if the user was found and updated
+    if (!onboarderUser) {
+        throw new Error('User not found');
+    }
+    // send response
+    return res.status(200).json(new ApiResponse(200, onboarderUser, "Onboarding Successful"));
+});
+
+
+
+export { generateAccessRefreshToken, register, login, logout, onboarding };
