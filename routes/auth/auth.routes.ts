@@ -13,5 +13,6 @@ authRoutes.post("/login", userLoginValidator(), validate, login);
 // secure routes
 authRoutes.post("/logout", verifyToken, logout);
 authRoutes.post("/onboarding", verifyToken, userOnboardingValidator(), validate, onboarding);
+authRoutes.put("/edit-account", verifyToken, onboarding);
 
 export { authRoutes }

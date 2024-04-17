@@ -5,6 +5,7 @@ import { ApiError } from "../../utils/error/Apierror";
 import { ApiResponse } from "../../utils/error/ApiResponse";
 import { asyncHandler } from '../../utils/error/asyncHandler';
 import { AuthRequest } from '../../utils/common/allInterface';
+import { emailVerificationMailgenContents, sendMail } from '../../utils/mail/sendmail.utils';
 
 // Generate Access and Refresh Token for user
 const generateAccessRefreshToken = async (userId: any) => {
@@ -46,6 +47,17 @@ const register = asyncHandler(async (req: Request, res: Response) => {
     // create new user
     const user = await User.create({ userName, email, password });
     // email verification prcocess-otp
+    const unHashedToken = await user.generateTemporaryToken();
+    await sendMail({
+        email: user?.email,
+        subject: "Please verify your email",
+        mailgenContent: emailVerificationMailgenContents(
+            user.userName,
+            `${req.protocol}://${req.get(
+                "host"
+            )}/api/v1/auth/verify-email/${unHashedToken}`
+        ),
+    });
     // send response
     return res.status(200).json(new ApiResponse(200, user, "User Created Successfully"));
 });
@@ -125,6 +137,9 @@ const onboarding = asyncHandler(async (req: AuthRequest, res: Response) => {
             obj[key] = data[key];
             return obj;
         }, {});
+    if (filteredData.email) {
+        // start the email process
+    }
 
     // save in Db
     const onboarderUser = await User.findByIdAndUpdate(req.user?.id, { ...filteredData, isOnboarded: true }, { new: true });
@@ -136,6 +151,56 @@ const onboarding = asyncHandler(async (req: AuthRequest, res: Response) => {
     return res.status(200).json(new ApiResponse(200, onboarderUser, "Onboarding Successful"));
 });
 
+// forgot password
+const forgotPassword = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { email } = req.body;
+        if (!email) {
+            throw new ApiError(400, "Please provide email", []);
+        }
+        const user = await User.findOne({ email });
+        if (!user) {
+            throw new ApiError(404, "User not exists", []);
+        }
+        const unHashedToken = await user.generateTemporaryToken();
+        // send email
+        await sendMail({
+            email: user.email,
+            subject: "Password Reset",
+            mailgenContent: emailVerificationMailgenContents(
+                user.userName,
+                `${req.protocol}://${req.get(
+                    "host"
+                )}/api/v1/auth/reset-password/${unHashedToken}`
+            ),
+        });
+        return res.status(200).json(new ApiResponse(200, {}, "Email sent successfully"));
+    }
+);
+
+// reset Password
+// const resetPassword = asyncHandler(
+//     async (req: Request, res: Response) => {
+//         const { password } = req.body;
+//         if (!password) {
+//             throw new ApiError(400, "Please provide password", []);
+//         }
+//         // const hashedPassword = await User.hashPassword(password);
+//         const user = await User.findOneAndUpdate(
+//             { temporaryToken: req.params.token },
+//             { password: hashedPassword, temporaryToken: "" },
+//             { new: true }
+//         );
+//         if (!user) {
+//             throw new ApiError(404, "User not found", []);
+//         }
+//         return res.status(200).json(new ApiResponse(200, {}, "Password reset successfully"));
+//     }
+// ):
 
 
-export { generateAccessRefreshToken, register, login, logout, onboarding };
+
+
+
+
+export { generateAccessRefreshToken, register, login, logout, onboarding, forgotPassword };
