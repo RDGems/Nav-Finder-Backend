@@ -33,15 +33,7 @@ const userLoginValidator = () => {
             .notEmpty()
             .withMessage("Email is required")
             .isEmail()
-            .withMessage("Email is invalid"),
-        body('password')
-            .trim()
-            .notEmpty()
-            .withMessage('Password is required')
-            .isLength({ min: 8 })
-            .withMessage('Password must be at least 8 characters long')
-            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
-            .withMessage('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character')
+            .withMessage("Email is invalid")
     ];
 };
 const userOnboardingValidator = () => {
@@ -109,8 +101,21 @@ const userOnboardingValidator = () => {
             .withMessage("Security answer is required")
     ];
 };
+const passwordResetValidators = () => {
+    return [
+        body('password')
+            .trim()
+            .notEmpty()
+            .withMessage('Password is required')
+            .isLength({ min: 8 })
+            .withMessage('Password must be at least 8 characters long')
+            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+            .withMessage('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character')
+    ];
+};
 export {
     userLoginValidator,
     userRegisterValidator,
-    userOnboardingValidator
+    userOnboardingValidator,
+    passwordResetValidators
 };

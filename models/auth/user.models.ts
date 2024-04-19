@@ -112,6 +112,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
+    otp: {
+        type: String,
+        default: null
+    },
     refreshToken: {
         type: String,
         default: ""

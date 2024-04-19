@@ -13,6 +13,7 @@ const cors = require('cors');
 
 // route imports
 import { authRoutes } from './routes/auth/auth.routes';
+import { swaggerDocs } from './utils/swagger/swagger';
 
 // app imports
 
@@ -62,6 +63,7 @@ const start = async () => {
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });
+        swaggerDocs(app, Number(PORT))
     }
     catch {
         console.error('Server failed to start');

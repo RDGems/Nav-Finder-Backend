@@ -70,22 +70,13 @@ const emailVerificationMailgenContents = (username: any, verificationUrl: any) =
         },
     };
 };
-const forgotPasswordMailgenContents = (username: any, resetUrl: any) => {
+const forgotPasswordMailgenContents = (username: any, otp: any) => {
     return {
         body: {
             name: username,
-            intro: "You have received this email because a password reset request for your account was received.",
-            action: {
-                instructions: "Click on the following button to reset your password:",
-                button: {
-                    color: "#22BC66", // Optional action button color
-                    text: "Reset your password",
-                    link: resetUrl,
-                },
-            },
+            intro: "You have received this email because a password reset request for your account was received. <br><br> <h2 style='color: red;'>Your OTP is: " + otp + "</h2>",
             outro: "If you did not request a password reset, no further action is required on your part.",
         },
     };
 };
-
 export { sendMail, emailVerificationMailgenContents, forgotPasswordMailgenContents }

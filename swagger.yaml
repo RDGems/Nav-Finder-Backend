@@ -1,0 +1,394 @@
+
+paths:
+  /api/v1/auth/signup:
+    post:
+      summary: Register a new users.
+      tags:
+        - 🔐 User Authentication
+      description: This Api endpoint allow users to register or signup to create their account .
+      operationId: register
+      requestBody:
+        description: User registration details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userName:
+                  type: string
+                  example: "userOne"
+                email:
+                  type: string
+                  example: "one@gmail.com"
+                password:
+                  type: string
+                  example: "Staging123$"
+      responses:
+        '201':
+          description: User registered successfully.
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+                example: "true"
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            Connection:
+              schema:
+                type: string
+                example: "keep-alive"
+            Content-Length:
+              schema:
+                type: string
+                example: "500"
+            Content-Type:
+              schema:
+                type: string
+                example: "application/json; charset=utf-8"
+            Date:
+              schema:
+                type: string
+                example: "Sun, 12 Dec 2021 06:25:37 GMT"
+            ETag:
+              schema:
+                type: string
+                example: W/"1f4-1q2mEjJRVbcL1EjonLxprbS85erA4qcFg"
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Rate-Limit:
+              schema:
+                type: string
+                example: "500"
+            Rate-Limit-Remaining:
+              schema:
+                type: string
+                example: "495"
+            RateLimit-Reset:
+              schema:
+                type: string
+                example:  '772'
+            X-Powered-By:
+              schema:
+                type: string
+                example:  Express
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "User created successfully"
+                  data:
+                    type: object
+                    properties:
+                      userName:
+                        type: string
+                        exaple: "userOne"
+                      email:
+                        type: string
+                        example:  "one@gmail.com"
+                      avatar:
+                        type: string
+                        example: "https://api.dicebear.com/6.x/pixel-art/svg?seed=userOne&background=%23000000&radius=50&colorful=1"
+                      password:
+                        type: string
+                        example: "$2a$120$xzvagjt.G1mtcSViSCQYK.Fj0pFr5i6wRbEEIJD2hYRgZeuX/A3iv8Lu."
+                      roles:
+                        type: string
+                        example: "User"
+                      onboarded:
+                        type: boolean
+                        example: false
+                      isEmailVerified:
+                        type: bollean
+                        example: false
+                      refreshToken:
+                        type: string 
+                        example: ''
+                      _id:
+                        type: string
+                        example: "6576ab6110a2a0e5b125600c"
+                      createdAt:
+                        type: string
+                        example: "2023-12-11T06:25:37.609Z"
+                      updatedAt:
+                        type: string
+                        example: "2023-12-11T06:25:37.609Z"
+                      __v:
+                        type: string
+                        example: 0
+  
+  /api/v1/auth/login:
+    post:
+      summary: Login a user 
+      tags:
+          - 🔐 User Authentication
+      description: The API endpoint allows users to log into the application securely and also returns an access token.When accessing this endpoint with valid login credentials, users will receive an access token in the response.Additionally, the API endpoint securely sets the access token within the browser/client httpOnly cookies for future authentication and authorization purposes.This functionality ensures a secure and efficient login process for users, providing them with an access token that can be used to authenticate subsequent API requests.By securely storing the access token in browser cookies, the endpoint enables automatic inclusion of the access token in future API requests, eliminating the need for users to manually manage and provide the token with each request..
+      operationId: login
+      requestBody:
+        description: User login details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "one@gmail.com"
+                password:
+                  type: string
+                  example: "Staging123$"
+      responses:
+        '200':
+          description: User logged in successfully.
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+                example: "true"
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            Connection:
+              schema:
+                type: string
+                example: "keep-alive"
+            Content-Length:
+              schema:
+                type: string
+                example: "500"
+            Content-Type:
+              schema:
+                type: string
+                example: "application/json; charset=utf-8"
+            Date:
+              schema:
+                type: string
+                example: "Sun, 12 Dec 2021 06:25:37 GMT"
+            ETag:
+              schema:
+                type: string
+                example: W/"1f4-1q2mEjJRVbcL1EjonLxprbS85erA4qcFg"
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Rate-Limit:
+              schema:
+                type: string
+                example: "500"
+            Rate-Limit-Remaining:
+              schema:
+                type: string
+                example: "495"
+            RateLimit-Reset:
+              schema:
+                type: string
+                example:  '772'
+            X-Powered-By:
+              schema:
+                type: string
+                example:  Express
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "User logged in successfully"
+                  data:
+                    type: object
+                    properties:
+                      userName:
+                        type: string
+                        exaple: "userOne"
+                      email:
+                        type: string
+                        example: "one@gmail.com"
+
+  /api/v1/auth/logout:
+    post:
+      summary: Logout a user 
+      tags:
+        - 🔐 User Authentication
+      description: >
+        The API endpoint is responsible for logging out users from the application and destroying the access token cookies stored on the client-side.
+        When accessing this endpoint, it triggers the logout process, revoking the user's authentication and terminating their active session.
+        Additionally, it ensures that any access token cookies associated with the user's session are removed from the client's browser, effectively logging them out from the application.
+      operationId: logout
+      responses:
+        '200':
+          description: User logged out successfully.
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+                example: "true"
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            Connection:
+              schema:
+                type: string
+                example: "keep-alive"
+            Content-Length:
+              schema:
+                type: string
+                example: "500"
+            Content-Type:
+              schema:
+                type: string
+                example: "application/json; charset=utf-8"
+            Date:
+              schema:
+                type: string
+                example: "Sun, 12 Dec 2021 06:25:37 GMT"
+            ETag:
+              schema:
+                type: string
+                example: W/"1f4-1q2mEjJRVbcL1EjonLxprbS85erA4qcFg"
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Rate-Limit:
+              schema:
+                type: string
+                example: "500"
+            Rate-Limit-Remaining:
+              schema:
+                type: string
+                example: "495"
+            RateLimit-Reset:
+              schema:
+                type: string
+                example:  '772'
+            X-Powered-By:
+              schema:
+                type: string
+                example:  Express
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "User logged out successfully"
+                 
+
+  /api/v1/auth/refreshToken:
+    get:
+      summary: Refresh Token 
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The Refresh Access Token API is responsible for refreshing the access token when it expires.
+
+        It allows you to make a request to this endpoint with the refresh token, which has a lengthy expiry time, to obtain a new access token.
+
+        Simultaneously, the API sets the new access token in a cookie for future authentication purposes while replacing the expired one.
+
+        This functionality ensures continuous access to protected resources by automatically renewing the access token <b>without requiring the user to reauthenticate manually</b>. 
+
+        By utilizing the refresh token, the API securely refreshes the access token and updates it in the cookie, ensuring seamless and uninterrupted access to authorized endpoints.
+      operationId: refreshToken
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: false
+          description: Bearer token for authorization. Please provide either this or the refresh token.
+        - in: cookie
+          name: refreshToken
+          schema:
+            type: string
+          required: false
+          description: Refresh token. Please provide either this or the Bearer token.
+      responses:
+        '200':
+          description: refreshToken Generated successfully.
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+                example: "true"
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            Connection:
+              schema:
+                type: string
+                example: "keep-alive"
+            Content-Length:
+              schema:
+                type: string
+                example: "500"
+            Content-Type:
+              schema:
+                type: string
+                example: "application/json; charset=utf-8"
+            Date:
+              schema:
+                type: string
+                example: "Sun, 12 Dec 2021 06:25:37 GMT"
+            ETag:
+              schema:
+                type: string
+                example: W/"1f4-1q2mEjJRVbcL1EjonLxprbS85erA4qcFg"
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Rate-Limit:
+              schema:
+                type: string
+                example: "500"
+            Rate-Limit-Remaining:
+              schema:
+                type: string
+                example: "495"
+            RateLimit-Reset:
+              schema:
+                type: string
+                example:  '772'
+            Set-Cookie:
+              schema:
+                type: string
+                example:  'refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDc2ZTM0ZWJlMWNmYjljYzA4YmQ0NDYiLCJpYXQiOjE2ODU1NjMyMjEsImV4cCI6MTY4NjQyNzIyMX0.TJpj8-2qU__GI_dKDdrHwQvUWCFSFXCfgOuV6MV05UI; Path=/; HttpOnly'
+            X-Powered-By:
+              schema:
+                type: string
+                example:  Express
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  
