@@ -4,17 +4,17 @@ export enum AccountType {
     Guest = 'Guest',
 }
 export enum Gender {
-    MALE = "MALE",
-    FEMALE = "FEMALE"
+    MALE = "Male",
+    FEMALE = "Female"
 }
 export enum AccountStatus {
-    ACTIVE = 'ACTIVE',
-    INACTIVE = 'INACTIVE',
-    BLOCKED = 'BLOCKED',
-    DELETED = 'DELETED'
+    ACTIVE = 'Active',
+    INACTIVE = 'InActive',
+    BLOCKED = 'Blocked',
+    DELETED = 'Deleted'
 }
 export enum SecurityQuestions {
-    FirstPet = "What was the name of your first pet?",
+    FirstPet = "What is your pet's name?",
     FirstCar = "What was the make and model of your first car?",
     ChildhoodStreet = "What was the name of the street where you grew up?",
     FirstSchool = "What was the name of your first school?",

@@ -98,7 +98,14 @@ const login = asyncHandler(async (req: Request, res: Response) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "PROD" ? true : false,
     };
-    const userDetails = await User.findById(isExistingUser._id).select("userName email accountType AccountStatus isOnboarded  avatar ");
+    let userDetails = await User.findById(isExistingUser._id).select("userName email accountType AccountStatus isOnboarded  avatar ");
+    userDetails = userDetails.toObject();
+
+    if (req.headers.origin?.startsWith("http://localhost")) {
+        userDetails.refreshToken = refreshToken;
+        userDetails.accessToken = accessToken;
+    }
+
     // send response
     return res.status(200).cookie("refreshToken", refreshToken, refreshOptions).
         cookie("accessToken", accessToken, accessOptions).json(new ApiResponse(200, userDetails, "Login Successful"));
@@ -211,7 +218,7 @@ const verifyEmail = asyncHandler(async (req: Request, res: Response) => {
 });
 // Refresh Token
 const refreshTokenGeneration = asyncHandler(async (req: Request, res: Response) => {
-    const incomingRefreshToken = req.headers.authorization?.split(" ")[1];
+    const incomingRefreshToken = req.headers.authorization?.split("Bearer")[1].trim() || req.cookies.accessToken;
     if (!incomingRefreshToken) {
         throw new ApiError(400, "Refresh Token is missing.", []);
     }
@@ -328,6 +335,7 @@ const changePassword = asyncHandler(async (req: AuthRequest, res: Response) => {
     if (!user) {
         throw new ApiError(404, "User not found", []);
     }
+    console.log(user);
     const isValid = await user.validatePassword(oldPassword);
     if (!isValid) {
         throw new ApiError(401, "Invalid Old Password", []);

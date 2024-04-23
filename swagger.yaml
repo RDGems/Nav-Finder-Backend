@@ -293,8 +293,7 @@ paths:
                     example:  true
                   message:
                     type: string
-                    example: "User logged out successfully"
-                 
+                    example: "User logged out successfully"              
 
   /api/v1/auth/refreshToken:
     get:
@@ -391,4 +390,617 @@ paths:
                   success:
                     type: boolean
                     example:  true
-                  
+
+  /api/v1/auth/verify-Email/{token}:
+
+
+
+    get:
+      summary: Verify Email
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The Verify Email API is responsible for verifying the user's email address by validating the email verification token.
+
+        It allows users to verify their email address by making a request to this endpoint with the email verification token received in their email.
+
+        Upon successful verification, the API updates the user's email verification status to true, confirming the validity of the email address.
+
+        This functionality ensures that users can verify their email addresses securely and efficiently, enabling them to access the application's features and functionalities.
+      operationId: verify-Email
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: false
+          description: Email verification token.
+      responses:
+        '200':
+          description: Successful verified email.
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "<html><body><h1>Success!</h1></body></html>"
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+                example: "true"
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            Connection:
+              schema:
+                type: string
+                example: "keep-alive"
+            Content-Length:
+              schema:
+                type: string
+                example: "500"
+            Content-Type:
+              schema:
+                type: string
+                example: "application/json; charset=utf-8"
+            Date:
+              schema:
+                type: string
+                example: "Sun, 12 Dec 2021 06:25:37 GMT"
+            ETag:
+              schema:
+                type: string
+                example: W/"1f4-1q2mEjJRVbcL1EjonLxprbS85erA4qcFg"
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Rate-Limit:
+              schema:
+                type: string
+                example: "500"
+            Rate-Limit-Remaining:
+              schema:
+                type: string
+                example: "495"
+            RateLimit-Reset:
+              schema:
+                type: string
+                example:  '772'
+            Set-Cookie:
+              schema:
+                type: string
+                example:  'refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDc2ZTM0ZWJlMWNmYjljYzA4YmQ0NDYiLCJpYXQiOjE2ODU1NjMyMjEsImV4cCI6MTY4NjQyNzIyMX0.TJpj8-2qU__GI_dKDdrHwQvUWCFSFXCfgOuV6MV05UI; Path=/; HttpOnly'
+            X-Powered-By:
+              schema:
+                type: string
+                example:  Express
+
+  /api/v1/auth/resendEmailVerification:
+    get:
+      summary: Resend Email Verification
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The Resend Email Verification API is responsible for resending the email verification link to the user's email address.
+
+        It allows users to request a new email verification link by making a request to this endpoint.
+
+        Upon successful operation, the API sends an email to the user's email address with the new verification link.
+
+        This functionality ensures that users can request a new email verification link in case the previous one expired or was not received.
+      operationId: resendEmailVerification
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Email sent successfully.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "Email sent successfully"
+
+  /api/v1/auth/onboarding:
+    post:
+      summary: User Onboarding
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The User Onboarding API is responsible for updating user details during the onboarding process.
+
+        It allows users to update their details by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the user's details and sets the `isOnboarded` status to true.
+
+        This functionality ensures that users can complete their onboarding process efficiently.
+      operationId: onboarding
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: User details for onboarding
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: "John"
+                lastName:
+                  type: string
+                  example: "Doe"
+                avatar:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                      example: "http://example.com/avatar.jpg"
+                    localPath:
+                      type: string
+                      example: "/path/to/avatar.jpg"
+                mobile:
+                  type: string
+                  example: "9876567210"
+                address:
+                  type: object
+                  properties:
+                    landmark:
+                      type: string
+                      example: "Near City Park"
+                    street:
+                      type: string
+                      example: "123 Main St"
+                    city:
+                      type: string
+                      example: "New York"
+                    state:
+                      type: string
+                      example: "NY"
+                    postalCode:
+                      type: string
+                      example: "10001"
+                    country:
+                      type: string
+                      example: "USA"
+                dob:
+                  type: string
+                  format: date
+                  example: "1990-01-01"
+                gender:
+                  type: string
+                  enum: ['Male', 'Female', 'Other']
+                  example: "Male"
+                AccountStatus:
+                  type: string
+                  enum: ['Active', 'Inactive']
+                  example: "Active"
+                securityQuestions:
+                  type: object
+                  properties:
+                    question1:
+                      type: string
+                      example: "What is your pet's name?"
+                    answer1:
+                      type: string
+                      example: "Fluffy"
+      responses:
+        '200':
+          description: Onboarding Successful.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "Onboarding Successful"
+
+  /api/v1/auth/edit-account:
+    put:
+      summary: User Account Editing
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The User Account Editing API is responsible for updating user details after the onboarding process.
+
+        It allows users to update their details by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the user's details.
+
+        This functionality ensures that users can update their account details efficiently.
+      operationId: editAccount
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: User details for account editing
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: "John"
+                lastName:
+                  type: string
+                  example: "Doe"
+                avatar:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                      example: "http://example.com/avatar.jpg"
+                    localPath:
+                      type: string
+                      example: "/path/to/avatar.jpg"
+                mobile:
+                  type: string
+                  example: "9876567210"
+                address:
+                  type: object
+                  properties:
+                    landmark:
+                      type: string
+                      example: "Near City Park"
+                    street:
+                      type: string
+                      example: "123 Main St"
+                    city:
+                      type: string
+                      example: "New York"
+                    state:
+                      type: string
+                      example: "NY"
+                    postalCode:
+                      type: string
+                      example: "10001"
+                    country:
+                      type: string
+                      example: "USA"
+                dob:
+                  type: string
+                  format: date
+                  example: "1990-01-01"
+                gender:
+                  type: string
+                  enum: ['Male', 'Female', 'Other']
+                  example: "Male"
+                AccountStatus:
+                  type: string
+                  enum: ['Active', 'Inactive']
+                  example: "Active"
+                securityQuestions:
+                  type: object
+                  properties:
+                    question1:
+                      type: string
+                      example: "What is your pet's name?"
+                    answer1:
+                      type: string
+                      example: "Fluffy"
+      responses:
+        '200':
+          description: Account Update Successful.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "Account Update Successful"
+
+  /api/v1/auth/forgotPassword:
+    post:
+      summary: User Forgot Password
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The User Forgot Password API is responsible for handling the forgot password process.
+
+        It allows users to request a password reset by making a request to this endpoint with their email in the request body.
+
+        Upon successful operation, the API generates a 6-digit OTP, stores it in the user's document for later verification, and sends an email to the user with the OTP.
+
+        This functionality ensures that users can reset their password efficiently.
+      operationId: forgotPassword
+      requestBody:
+        description: User's email for password reset
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "one@gmail.com"
+      responses:
+        '200':
+          description: Email sent successfully.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "Email sent successfully"
+        '400':
+          description: Bad request. The email is not provided or invalid.
+        '404':
+          description: User not found.
+
+  /api/v1/auth/resetPassword:
+    post:
+      summary: User Reset Password
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The User Reset Password API is responsible for handling the password reset process.
+
+        It allows users to reset their password by making a request to this endpoint with their email and new password in the request body.
+
+        Upon successful operation, the API updates the user's password in the database and returns a success message.
+
+        This functionality ensures that users can reset their password efficiently.
+      operationId: resetPassword
+      requestBody:
+        description: User's email and new password for password reset
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "one@gmail.com"
+                password:
+                  type: string
+                  example: "Staging123%"
+      responses:
+        '200':
+          description: Password reset successfully.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "Password reset successfully"
+        '400':
+          description: Bad request. The email or password is not provided or invalid.
+
+  /api/v1/auth/changePassword:
+    post:
+      summary: User Change Password
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The User Change Password API is responsible for handling the password change process.
+
+        It allows users to change their password by making a request to this endpoint with their old and new passwords in the request body.
+
+        Upon successful operation, the API updates the user's password in the database and returns a success message.
+
+        This functionality ensures that users can change their password efficiently.
+      operationId: changePassword
+      requestBody:
+        description: User's old and new passwords for password change
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                  example: "Staging123$"
+                password:
+                  type: string
+                  example: "Staging123%"
+      responses:
+        '200':
+          description: Password changed successfully.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "Password changed successfully"
+        '400':
+          description: Bad request. The old password, new password is not provided or they are the same.
+        '401':
+          description: Unauthorized. The old password is invalid.
+        '404':
+          description: User not found.
+
+  /api/v1/auth/verifyOtp:
+    post:
+      summary: User Verify OTP
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The User Verify OTP API is responsible for handling the OTP verification process.
+
+        It allows users to verify their OTP by making a request to this endpoint with their email and OTP in the request body.
+
+        Upon successful operation, the API verifies the OTP, clears it from the user's document, and returns a success message.
+
+        This functionality ensures that users can verify their OTP efficiently.
+      operationId: verifyOtp
+      requestBody:
+        description: User's email and OTP for OTP verification
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "one@gmail.com"
+                otp:
+                  type: string
+                  example: "123456"
+      responses:
+        '200':
+          description: OTP verified successfully.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "OTP verified successfully"
+        '400':
+          description: Bad request. The email or OTP is not provided.
+        '401':
+          description: Unauthorized. The OTP is invalid.
+        '404':
+          description: User not found.
+          
+  /api/v1/auth/changeAccountStatus:
+    post:
+      summary: User Change Account Status
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The User Change Account Status API is responsible for handling the account status change process.
+
+        It allows users to change their account status by making a request to this endpoint with the new status in the request body.
+
+        Upon successful operation, the API updates the user's account status in the database and returns a success message.
+
+        This functionality ensures that users can change their account status efficiently.
+      operationId: changeAccountStatus
+      requestBody:
+        description: User's new account status
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: "Active"
+      responses:
+        '200':
+          description: Account status changed successfully.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "Account status changed successfully"
+        '400':
+          description: Bad request. The status is not provided.
+        '404':
+          description: User not found.
+
+  /api/v1/auth/getCurrentUser:
+    get:
+      summary: Get Current User
+      tags:
+        - 🔐 User Authentication
+      description: |
+        The Get Current User API is responsible for retrieving the details of the currently authenticated user.
+
+        It allows users to get their details by making a request to this endpoint with the JWT token in the Authorization header or in the cookies.
+
+        Upon successful operation, the API returns the user's details.
+
+        This functionality ensures that users can retrieve their details efficiently.
+      operationId: getCurrentUser
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: JWT token for authentication
+        - in: cookie
+          name: accessToken
+          schema:
+            type: string
+          required: false
+          description: JWT token for authentication
+      responses:
+        '200':
+          description: User details retrieved successfully.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example:  true
+                  message:
+                    type: string
+                    example: "User details"
+        '401':
+          description: Unauthorized access. The JWT token is not provided or invalid.
+        '404':
+          description: User not found.
+
+
+
+
+
+
+
+
+
+                    

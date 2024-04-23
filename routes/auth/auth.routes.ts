@@ -21,6 +21,6 @@ authRoutes.put("/edit-account", verifyToken, onboarding);
 authRoutes.get("/resendEmailVerification", verifyToken, resendEmailVerification);
 authRoutes.post("/changePassword", passwordResetValidators(), validate, verifyToken, changePassword);
 authRoutes.get("/getCurrentUser", verifyToken, getCurrentUser);
-authRoutes.get("/changeAccountStatus", verifyToken, changeAccountStatus);
+authRoutes.post("/changeAccountStatus", verifyToken, changeAccountStatus);
 
 export { authRoutes }
