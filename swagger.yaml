@@ -391,10 +391,7 @@ paths:
                     type: boolean
                     example:  true
 
-  /api/v1/auth/verify-Email/{token}:
-
-
-
+  /api/v1/auth/verifyEmail/{token}:
     get:
       summary: Verify Email
       tags:
@@ -537,7 +534,7 @@ paths:
         description: User details for onboarding
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -547,15 +544,9 @@ paths:
                 lastName:
                   type: string
                   example: "Doe"
-                avatar:
-                  type: object
-                  properties:
-                    url:
-                      type: string
-                      example: "http://example.com/avatar.jpg"
-                    localPath:
-                      type: string
-                      example: "/path/to/avatar.jpg"
+                file:
+                  type: string
+                  format: binary
                 mobile:
                   type: string
                   example: "9876567210"
@@ -616,19 +607,19 @@ paths:
                     type: string
                     example: "Onboarding Successful"
 
-  /api/v1/auth/edit-account:
+  /api/v1/auth/editAccount:
     put:
-      summary: User Account Editing
+      summary: Edit User Account
       tags:
         - 🔐 User Authentication
       description: |
-        The User Account Editing API is responsible for updating user details after the onboarding process.
+        The Edit User Account API is responsible for updating user details after the onboarding process.
 
         It allows users to update their details by making a request to this endpoint with the required data in the request body.
 
         Upon successful operation, the API updates the user's details.
 
-        This functionality ensures that users can update their account details efficiently.
+        This functionality ensures that users can update their account information efficiently.
       operationId: editAccount
       security:
         - bearerAuth: []
@@ -636,7 +627,7 @@ paths:
         description: User details for account editing
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -646,15 +637,9 @@ paths:
                 lastName:
                   type: string
                   example: "Doe"
-                avatar:
-                  type: object
-                  properties:
-                    url:
-                      type: string
-                      example: "http://example.com/avatar.jpg"
-                    localPath:
-                      type: string
-                      example: "/path/to/avatar.jpg"
+                file:
+                  type: string
+                  format: binary
                 mobile:
                   type: string
                   example: "9876567210"

@@ -9,6 +9,9 @@ import { emailVerificationMailgenContents, forgotPasswordMailgenContents, sendMa
 import Jwt, { JwtPayload } from 'jsonwebtoken';
 import otpGenerator from 'otp-generator';
 import path from 'path';
+import fs from 'fs';
+import { uploadToCloudinary } from '../../utils/cloudinary/cloudinary.services';
+import { sendDataToQueue } from '../../utils/queue/rabbitmqsetup.utils';
 // Generate Access and Refresh Token for user
 const generateAccessRefreshToken = async (userId: any) => {
     try {
@@ -43,23 +46,27 @@ const register = asyncHandler(async (req: Request, res: Response) => {
     userName = userName.replace(/\s/g, '');
 
     // check if user already exists
-    const isExistingUser = await User.findOne({ $or: [{ email }, { userName }] });
-    if (isExistingUser) throw new ApiError(409, "User already exists");
+    const user = await User.findOne({ $or: [{ email }, { userName }] });
+    // if (isExistingUser) throw new ApiError(409, "User already exists");
 
     // create new user
-    const user = await User.create({ userName, email, password });
+    // const user = await User.create({ userName, email, password });
     // email verification prcocess-otp
     const unHashedToken = await user.generateTemporaryToken();
-    await sendMail({
-        email: user?.email,
-        subject: "Please verify your email",
-        mailgenContent: emailVerificationMailgenContents(
-            user.userName,
-            `${req.protocol}://${req.get(
-                "host"
-            )}/api/v1/auth/verify-email/${unHashedToken}`
-        ),
-    });
+    const data = {
+        user: {
+            email: user.email,
+            userName: user.userName
+        },
+        req: {
+            protocol: req.protocol,
+            host: req.get('host')
+        },
+        unHashedToken: unHashedToken
+    };
+
+    // Send the data to the queue
+    sendDataToQueue(JSON.stringify(data));
     // send response
     return res.status(200).json(new ApiResponse(200, user, "User Created Successfully"));
 });
@@ -135,6 +142,7 @@ const logout = asyncHandler(async (req: AuthRequest, res: Response) => {
 // Onboarding process for user
 const onboarding = asyncHandler(async (req: AuthRequest, res: Response) => {
     const data: Record<string, any> = { ...req.body };
+    console.log(req.file)
     // Get the schema keys from the User model
     const schemaKeys = Object.keys(User.schema.paths);
 
@@ -154,6 +162,31 @@ const onboarding = asyncHandler(async (req: AuthRequest, res: Response) => {
     if (onboarderUser.email !== filteredData.email) {
         isEmailVerifiedValue = false;
     }
+
+    // upload profile picture to cloudinary
+    let imageUrl = `https://api.dicebear.com/6.x/pixel-art/svg?seed=${onboarderUser.userName}&background=%23000000&radius=50&colorful=1`;
+    if (req?.file?.path) {
+        console.log(req?.file?.path)
+        const result = await uploadToCloudinary(req?.file?.path);
+        if (result) {
+            imageUrl = result;
+        }
+        // delete the file from the local storage
+        if (fs.existsSync(path.join(__dirname, '..', '..', 'public', 'temp', req.file.filename))) {
+            fs.unlink(path.join(__dirname, '..', '..', 'public', 'temp', req.file.filename), err => {
+                if (err) {
+                    console.error("Error deleting file:", err);
+                }
+            });
+        } else {
+            console.log('File does not exist');
+        }
+    }
+    onboarderUser.avatar = {
+        url: imageUrl, // the URL of the uploaded image on Cloudinary
+        localPath: req?.file?.path, // the path of the image file on your local server
+    };
+    await onboarderUser.save();
     //    check that onboarderUser and filteredData.email same or not
     const updatedUser = await User.findByIdAndUpdate(req.user?.id, { ...filteredData, isOnboarded: true, isEmailVerified: isEmailVerifiedValue }, { new: true });
     if (!updatedUser) {

@@ -56,9 +56,6 @@ const userOnboardingValidator = () => {
             .withMessage("Mobile number is required")
             .isMobilePhone("en-IN") // Provide the required arguments for the isMobilePhone() function
             .withMessage("Mobile number is invalid"),
-        body("avatar")
-            .notEmpty()
-            .withMessage("Avatar must be an object"),
         body("address.landmark")
             .trim()
             .notEmpty()
