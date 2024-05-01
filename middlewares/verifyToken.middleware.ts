@@ -28,7 +28,17 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
         modifiedReq.user = decodedToken;
         next();
     } catch (error: any) {
-        next();
+        if (error instanceof jwt.TokenExpiredError) {
+            return res.status(401).json({
+                "success": false,
+                "message": "Unauthorized access"
+            });
+        } else if (error instanceof jwt.JsonWebTokenError) {
+            return res.status(401).json({
+                "success": false,
+                "message": "Unauthorized access"
+            });
+        }
     }
 }
 

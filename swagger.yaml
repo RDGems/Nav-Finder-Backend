@@ -4,7 +4,7 @@ paths:
     post:
       summary: Register a new users.
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: This Api endpoint allow users to register or signup to create their account .
       operationId: register
       requestBody:
@@ -71,19 +71,19 @@ paths:
             RateLimit-Reset:
               schema:
                 type: string
-                example:  '772'
+                example: '772'
             X-Powered-By:
               schema:
                 type: string
-                example:  Express
+                example: Express
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "User created successfully"
@@ -95,7 +95,7 @@ paths:
                         exaple: "userOne"
                       email:
                         type: string
-                        example:  "one@gmail.com"
+                        example: "one@gmail.com"
                       avatar:
                         type: string
                         example: "https://api.dicebear.com/6.x/pixel-art/svg?seed=userOne&background=%23000000&radius=50&colorful=1"
@@ -112,7 +112,7 @@ paths:
                         type: bollean
                         example: false
                       refreshToken:
-                        type: string 
+                        type: string
                         example: ''
                       _id:
                         type: string
@@ -126,12 +126,12 @@ paths:
                       __v:
                         type: string
                         example: 0
-  
+
   /api/v1/auth/login:
     post:
-      summary: Login a user 
+      summary: Login a user
       tags:
-          - 🔐 User Authentication
+      - 🔐 User Authentication
       description: The API endpoint allows users to log into the application securely and also returns an access token.When accessing this endpoint with valid login credentials, users will receive an access token in the response.Additionally, the API endpoint securely sets the access token within the browser/client httpOnly cookies for future authentication and authorization purposes.This functionality ensures a secure and efficient login process for users, providing them with an access token that can be used to authenticate subsequent API requests.By securely storing the access token in browser cookies, the endpoint enables automatic inclusion of the access token in future API requests, eliminating the need for users to manually manage and provide the token with each request..
       operationId: login
       requestBody:
@@ -195,19 +195,19 @@ paths:
             RateLimit-Reset:
               schema:
                 type: string
-                example:  '772'
+                example: '772'
             X-Powered-By:
               schema:
                 type: string
-                example:  Express
+                example: Express
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "User logged in successfully"
@@ -223,13 +223,11 @@ paths:
 
   /api/v1/auth/logout:
     post:
-      summary: Logout a user 
+      summary: Logout a user
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: >
-        The API endpoint is responsible for logging out users from the application and destroying the access token cookies stored on the client-side.
-        When accessing this endpoint, it triggers the logout process, revoking the user's authentication and terminating their active session.
-        Additionally, it ensures that any access token cookies associated with the user's session are removed from the client's browser, effectively logging them out from the application.
+        The API endpoint is responsible for logging out users from the application and destroying the access token cookies stored on the client-side. When accessing this endpoint, it triggers the logout process, revoking the user's authentication and terminating their active session. Additionally, it ensures that any access token cookies associated with the user's session are removed from the client's browser, effectively logging them out from the application.
       operationId: logout
       responses:
         '200':
@@ -278,54 +276,45 @@ paths:
             RateLimit-Reset:
               schema:
                 type: string
-                example:  '772'
+                example: '772'
             X-Powered-By:
               schema:
                 type: string
-                example:  Express
+                example: Express
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
-                    example: "User logged out successfully"              
+                    example: "User logged out successfully"
 
   /api/v1/auth/refreshToken:
     get:
-      summary: Refresh Token 
+      summary: Refresh Token
       tags:
-        - 🔐 User Authentication
-      description: |
-        The Refresh Access Token API is responsible for refreshing the access token when it expires.
-
-        It allows you to make a request to this endpoint with the refresh token, which has a lengthy expiry time, to obtain a new access token.
-
-        Simultaneously, the API sets the new access token in a cookie for future authentication purposes while replacing the expired one.
-
-        This functionality ensures continuous access to protected resources by automatically renewing the access token <b>without requiring the user to reauthenticate manually</b>. 
-
-        By utilizing the refresh token, the API securely refreshes the access token and updates it in the cookie, ensuring seamless and uninterrupted access to authorized endpoints.
+      - 🔐 User Authentication
+      description: "The Refresh Access Token API is responsible for refreshing the access token when it expires.\n                #magic___^_^___line\nIt allows you to make a request to this endpoint with the refresh token, which has a lengthy expiry time, to obtain a new access token.\n                #magic___^_^___line\nSimultaneously, the API sets the new access token in a cookie for future authentication purposes while replacing the expired one.\n                #magic___^_^___line\nThis functionality ensures continuous access to protected resources by automatically renewing the access token <b>without requiring the user to reauthenticate manually</b>. \n                #magic___^_^___line\nBy utilizing the refresh token, the API securely refreshes the access token and updates it in the cookie, ensuring seamless and uninterrupted access to authorized endpoints.\n"
       operationId: refreshToken
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: false
-          description: Bearer token for authorization. Please provide either this or the refresh token.
-        - in: cookie
-          name: refreshToken
-          schema:
-            type: string
-          required: false
-          description: Refresh token. Please provide either this or the Bearer token.
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        required: false
+        description: Bearer token for authorization. Please provide either this or the refresh token.
+      - in: cookie
+        name: refreshToken
+        schema:
+          type: string
+        required: false
+        description: Refresh token. Please provide either this or the Bearer token.
       responses:
         '200':
           description: refreshToken Generated successfully.
@@ -373,29 +362,29 @@ paths:
             RateLimit-Reset:
               schema:
                 type: string
-                example:  '772'
+                example: '772'
             Set-Cookie:
               schema:
                 type: string
-                example:  'refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDc2ZTM0ZWJlMWNmYjljYzA4YmQ0NDYiLCJpYXQiOjE2ODU1NjMyMjEsImV4cCI6MTY4NjQyNzIyMX0.TJpj8-2qU__GI_dKDdrHwQvUWCFSFXCfgOuV6MV05UI; Path=/; HttpOnly'
+                example: 'refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDc2ZTM0ZWJlMWNmYjljYzA4YmQ0NDYiLCJpYXQiOjE2ODU1NjMyMjEsImV4cCI6MTY4NjQyNzIyMX0.TJpj8-2qU__GI_dKDdrHwQvUWCFSFXCfgOuV6MV05UI; Path=/; HttpOnly'
             X-Powered-By:
               schema:
                 type: string
-                example:  Express
+                example: Express
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
 
   /api/v1/auth/verifyEmail/{token}:
     get:
       summary: Verify Email
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: |
         The Verify Email API is responsible for verifying the user's email address by validating the email verification token.
 
@@ -406,14 +395,14 @@ paths:
         This functionality ensures that users can verify their email addresses securely and efficiently, enabling them to access the application's features and functionalities.
       operationId: verify-Email
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       parameters:
-        - in: path
-          name: token
-          schema:
-            type: string
-          required: false
-          description: Email verification token.
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: false
+        description: Email verification token.
       responses:
         '200':
           description: Successful verified email.
@@ -423,12 +412,12 @@ paths:
                 type: string
                 example: "<html><body><h1>Success!</h1></body></html>"
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
           headers:
             Access-Control-Allow-Credentials:
               schema:
@@ -473,21 +462,21 @@ paths:
             RateLimit-Reset:
               schema:
                 type: string
-                example:  '772'
+                example: '772'
             Set-Cookie:
               schema:
                 type: string
-                example:  'refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDc2ZTM0ZWJlMWNmYjljYzA4YmQ0NDYiLCJpYXQiOjE2ODU1NjMyMjEsImV4cCI6MTY4NjQyNzIyMX0.TJpj8-2qU__GI_dKDdrHwQvUWCFSFXCfgOuV6MV05UI; Path=/; HttpOnly'
+                example: 'refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDc2ZTM0ZWJlMWNmYjljYzA4YmQ0NDYiLCJpYXQiOjE2ODU1NjMyMjEsImV4cCI6MTY4NjQyNzIyMX0.TJpj8-2qU__GI_dKDdrHwQvUWCFSFXCfgOuV6MV05UI; Path=/; HttpOnly'
             X-Powered-By:
               schema:
                 type: string
-                example:  Express
+                example: Express
 
   /api/v1/auth/resendEmailVerification:
     get:
       summary: Resend Email Verification
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: |
         The Resend Email Verification API is responsible for resending the email verification link to the user's email address.
 
@@ -498,18 +487,18 @@ paths:
         This functionality ensures that users can request a new email verification link in case the previous one expired or was not received.
       operationId: resendEmailVerification
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       responses:
         '200':
           description: Email sent successfully.
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "Email sent successfully"
@@ -518,7 +507,7 @@ paths:
     post:
       summary: User Onboarding
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: |
         The User Onboarding API is responsible for updating user details during the onboarding process.
 
@@ -529,7 +518,7 @@ paths:
         This functionality ensures that users can complete their onboarding process efficiently.
       operationId: onboarding
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         description: User details for onboarding
         required: true
@@ -597,12 +586,12 @@ paths:
           description: Onboarding Successful.
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "Onboarding Successful"
@@ -611,7 +600,7 @@ paths:
     put:
       summary: Edit User Account
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: |
         The Edit User Account API is responsible for updating user details after the onboarding process.
 
@@ -622,7 +611,7 @@ paths:
         This functionality ensures that users can update their account information efficiently.
       operationId: editAccount
       security:
-        - bearerAuth: []
+      - bearerAuth: []
       requestBody:
         description: User details for account editing
         required: true
@@ -690,12 +679,12 @@ paths:
           description: Account Update Successful.
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "Account Update Successful"
@@ -704,7 +693,7 @@ paths:
     post:
       summary: User Forgot Password
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: |
         The User Forgot Password API is responsible for handling the forgot password process.
 
@@ -731,12 +720,12 @@ paths:
           description: Email sent successfully.
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "Email sent successfully"
@@ -749,7 +738,7 @@ paths:
     post:
       summary: User Reset Password
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: |
         The User Reset Password API is responsible for handling the password reset process.
 
@@ -779,12 +768,12 @@ paths:
           description: Password reset successfully.
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "Password reset successfully"
@@ -795,7 +784,7 @@ paths:
     post:
       summary: User Change Password
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: |
         The User Change Password API is responsible for handling the password change process.
 
@@ -824,12 +813,12 @@ paths:
           description: Password changed successfully.
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "Password changed successfully"
@@ -844,7 +833,7 @@ paths:
     post:
       summary: User Verify OTP
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: |
         The User Verify OTP API is responsible for handling the OTP verification process.
 
@@ -874,12 +863,12 @@ paths:
           description: OTP verified successfully.
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "OTP verified successfully"
@@ -889,12 +878,12 @@ paths:
           description: Unauthorized. The OTP is invalid.
         '404':
           description: User not found.
-          
+
   /api/v1/auth/changeAccountStatus:
     post:
       summary: User Change Account Status
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: |
         The User Change Account Status API is responsible for handling the account status change process.
 
@@ -920,12 +909,12 @@ paths:
           description: Account status changed successfully.
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "Account status changed successfully"
@@ -938,7 +927,7 @@ paths:
     get:
       summary: Get Current User
       tags:
-        - 🔐 User Authentication
+      - 🔐 User Authentication
       description: |
         The Get Current User API is responsible for retrieving the details of the currently authenticated user.
 
@@ -949,29 +938,29 @@ paths:
         This functionality ensures that users can retrieve their details efficiently.
       operationId: getCurrentUser
       parameters:
-        - in: header
-          name: Authorization
-          schema:
-            type: string
-          required: true
-          description: JWT token for authentication
-        - in: cookie
-          name: accessToken
-          schema:
-            type: string
-          required: false
-          description: JWT token for authentication
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+        required: true
+        description: JWT token for authentication
+      - in: cookie
+        name: accessToken
+        schema:
+          type: string
+        required: false
+        description: JWT token for authentication
       responses:
         '200':
           description: User details retrieved successfully.
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   success:
                     type: boolean
-                    example:  true
+                    example: true
                   message:
                     type: string
                     example: "User details"
@@ -982,10 +971,506 @@ paths:
 
 
 
+  # driver process starts here
+  /api/v1/driver/preferedLocation:
+    post:
+      summary: Driver Preferred Place
+      tags:
+      - 🚗 Driver
+      description: |
+        The Driver Preferred Place API is responsible for updating the driver's preferred place.
+
+        It allows drivers to update their preferred place by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the driver's preferred place.
+
+        This functionality ensures that drivers can update their preferred place efficiently.
+      operationId: driverPreferredPlace
+      security:
+      - bearerAuth: []
+      requestBody:
+        description: Driver preferred place details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                preferredPlace:
+                  type: string
+                  example: "New York City"
+                location:
+                  type: array
+                  items:
+                    type: number
+                  example: [40.7128, -74.0060]
+      responses:
+        '200':
+          description: Preferred Place Update Successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Preferred Place Update Successful"
+
+  # driver chooses its vehicle type
+  /api/v1/driver/driverVehicleType:
+    post:
+      summary: Driver Vehicle Type
+      tags:
+      - 🚗 Driver
+      description: |
+        The Driver Vehicle Type API is responsible for updating the driver's vehicle type.
+
+        It allows drivers to update their vehicle type by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the driver's vehicle type.
+
+        This functionality ensures that drivers can update their vehicle type efficiently.
+      operationId: driverVehicleType
+      security:
+      - bearerAuth: []
+      parameters:
+      - in: header
+        name: Access-Medium
+        schema:
+          type: string
+        required: true
+        description: Custom header for specifying the access medium.
+      requestBody:
+        description: Driver vehicle type details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vehicleType:
+                  type: string
+                  example: "Car"
+      responses:
+        '200':
+          description: Vehicle Type Update Successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Vehicle Type Update Successful"
 
 
+  # driver document uploading start from here
+  /api/v1/driver/document/vehiclePermit:
+    post:
+      summary: Upload Driver Vehicle Permit
+      tags:
+      - 🚗 Driver
+      description: |
+        The Upload Driver Vehicle Permit API is responsible for uploading the driver's Vehicle Permit.
+
+        It allows drivers to upload their Vehicle Permit by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the driver's Vehicle Permit.
+
+        This functionality ensures that drivers can upload their Vehicle Permit efficiently.
+      operationId: uploadVehiclePermitDetails
+      security:
+      - bearerAuth: []
+      parameters:
+      - in: header
+        name: Access-Medium
+        schema:
+          type: string
+        required: true
+        description: Custom header for specifying the access medium.
+      requestBody:
+        description: Driver Vehicle Permit
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                documentType:
+                  type: string
+                  example: "vehiclePermit"
+                documentOwnerName:
+                  type: string
+                  example: "John Doe"
+                documentNumber:
+                  type: string
+                  example: "123456789"
+                documentExpiryDate:
+                  type: string
+                  format: date
+                  example: "2025-12-31"
+                documentImage:
+                  type: string
+                  format: binary
+                  description: The image of the document.
+      responses:
+        '200':
+          description: Vehicle Permit Uploaded Successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Vehicle Permit Uploaded Successful"
+  /api/v1/driver/document/aadhaarcard:
+    post:
+      summary: Upload Driver Aadhaar Card
+      tags:
+      - 🚗 Driver
+      description: |
+        The Upload Driver Aadhaarcard API is responsible for uploading the driver's Aadhaarcard.
+
+        It allows drivers to upload their Aadhaarcard by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the driver's Aadhaarcard.
+
+        This functionality ensures that drivers can upload their Aadhaarcard efficiently.
+      operationId: uploadAaadhaarcardDetails
+      security:
+      - bearerAuth: []
+      parameters:
+      - in: header
+        name: Access-Medium
+        schema:
+          type: string
+        required: true
+        description: Custom header for specifying the access medium.
+      requestBody:
+        description: Driver Aadhaarcard
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                documentType:
+                  type: string
+                  example: "aadhaarcard"
+                documentNumber:
+                  type: string
+                  example: "123456789"
+                documentImage:
+                  type: string
+                  format: binary
+                  description: The image of the document.
+      responses:
+        '200':
+          description: Aadhaarcard Uploaded Successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Aadhaarcard Uploaded Successful"
+  /api/v1/driver/document/pancard:
+    post:
+      summary: Upload Driver pancard
+      tags:
+      - 🚗 Driver
+      description: |
+        The Upload Driver Pancard API is responsible for uploading the driver's Pancard.
+
+        It allows drivers to upload their Pancard by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the driver's Pancard.
+
+        This functionality ensures that drivers can upload their Pancard efficiently.
+      operationId: uploadPancardDetails
+      security:
+      - bearerAuth: []
+      parameters:
+      - in: header
+        name: Access-Medium
+        schema:
+          type: string
+        required: true
+        description: Custom header for specifying the access medium.
+      requestBody:
+        description: Driver Pancard
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                documentType:
+                  type: string
+                  example: "pancard"
+                documentNumber:
+                  type: string
+                  example: "123456789"
+                documentImage:
+                  type: string
+                  format: binary
+                  description: The image of the document.
+      responses:
+        '200':
+          description: Pancard Uploaded Successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Pancard Uploaded Successful"
+  /api/v1/driver/document/drivingLicence:
+    post:
+      summary: Upload Driver Driving Licence
+      tags:
+      - 🚗 Driver
+      description: |
+        The Upload Driver  Driving Licence API is responsible for uploading the driver's  Driving Licence.
+
+        It allows drivers to upload their  Driving Licence by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the driver's  Driving Licence.
+
+        This functionality ensures that drivers can upload their  Driving Licence efficiently.
+      operationId: uploadDrivingLicenceDetails
+      security:
+      - bearerAuth: []
+      parameters:
+      - in: header
+        name: Access-Medium
+        schema:
+          type: string
+        required: true
+        description: Custom header for specifying the access medium.
+      requestBody:
+        description: Driver  Driving Licence
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                documentType:
+                  type: string
+                  example: "drivingLicence"
+                documentNumber:
+                  type: string
+                  example: "123456789"
+                documentExpiryDate:
+                  type: string
+                  format: date
+                  example: "2025-12-31"
+                documentImage:
+                  type: string
+                  format: binary
+                  description: The image of the document.
+      responses:
+        '200':
+          description: Driving Licence Uploaded Successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: " Driving Licence Uploaded Successful"
+  /api/v1/driver/document/vehicleRegistration:
+    post:
+      summary: Upload Driver Vehicle Registration
+      tags:
+      - 🚗 Driver
+      description: |
+        The Upload Driver Vehicle Registration API is responsible for uploading the driver's Vehicle Registration.
+
+        It allows drivers to upload their Vehicle Registration by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the driver's Vehicle Registration.
+
+        This functionality ensures that drivers can upload their Vehicle Registration efficiently.
+      operationId: uploadvehicleRegistrationDetails
+      security:
+      - bearerAuth: []
+      parameters:
+      - in: header
+        name: Access-Medium
+        schema:
+          type: string
+        required: true
+        description: Custom header for specifying the access medium.
+      requestBody:
+        description: Driver Vehicle Registration
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                documentType:
+                  type: string
+                  example: "vehicleRegistration"
+                documentNumber:
+                  type: string
+                  example: "123456789"
+                documentExpiryDate:
+                  type: string
+                  format: date
+                  example: "2025-12-31"
+                documentImage:
+                  type: string
+                  format: binary
+                  description: The image of the document.
+      responses:
+        '200':
+          description: Vehicle Registration Uploaded Successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Vehicle Registration Uploaded Successful"
+  /api/v1/driver/document/insurance:
+    post:
+      summary: Upload Driver Insurance
+      tags:
+      - 🚗 Driver
+      description: |
+        The Upload Driver Insurance API is responsible for uploading the driver's Insurance.
+
+        It allows drivers to upload their Insurance by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the driver's Insurance.
+
+        This functionality ensures that drivers can upload their Insurance efficiently.
+      operationId: uploadInsuranceDetails
+      security:
+      - bearerAuth: []
+      parameters:
+      - in: header
+        name: Access-Medium
+        schema:
+          type: string
+        required: true
+        description: Custom header for specifying the access medium.
+      requestBody:
+        description: Driver Insurance
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                documentType:
+                  type: string
+                  example: "insurance"
+                documentNumber:
+                  type: string
+                  example: "123456789"
+                documentExpiryDate:
+                  type: string
+                  format: date
+                  example: "2025-12-31"
+                documentImage:
+                  type: string
+                  format: binary
+                  description: The image of the document.
+      responses:
+        '200':
+          description: Insurance Uploaded Successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Insurance Uploaded Successful"
+  /api/v1/driver/document/driverPhoto:
+    post:
+      summary: Upload Driver Driver Photo
+      tags:
+      - 🚗 Driver
+      description: |
+        The Upload Driver Driver Photo API is responsible for uploading the driver's Driver Photo.
+
+        It allows drivers to upload their Driver Photo by making a request to this endpoint with the required data in the request body.
+
+        Upon successful operation, the API updates the driver's Driver Photo.
+
+        This functionality ensures that drivers can upload their Driver Photo efficiently.
+      operationId: uploadDriver PhotoDetails
+      security:
+      - bearerAuth: []
+      parameters:
+      - in: header
+        name: Access-Medium
+        schema:
+          type: string
+        required: true
+        description: Custom header for specifying the access medium.
+      requestBody:
+        description: Driver Driver Photo
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                documentType:
+                  type: string
+                  example: "driverPhoto"
+                documentImage:
+                  type: string
+                  format: binary
+                  description: The image of the document.
+      responses:
+        '200':
+          description: Driver Photo Uploaded Successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Driver Photo Uploaded Successful"
 
 
-
-
-                    

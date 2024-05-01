@@ -17,7 +17,8 @@ import { swaggerDocs } from './utils/swagger/swagger';
 import { connectQueue, consumeDataFromQueue } from './utils/queue/rabbitmqsetup.utils';
 
 // app imports
-
+import { driverRoutes } from './routes/driver/driver.routes';
+import { verifyToken } from './middlewares/verifyToken.middleware';
 // rate limiting
 const rateLimit = require("express-rate-limit");
 
@@ -66,6 +67,7 @@ app.use(cookiParser());
 
 // route path setup
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/driver', verifyToken, driverRoutes);
 
 
 

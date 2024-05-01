@@ -25,3 +25,14 @@ export enum SecurityQuestions {
     FathersMiddleName = "What is your father's middle name?",
     FavoriteTeacher = "What was the name of your favorite teacher?"
 }
+
+export const vehicleOptions = ["Car", "Bus", "Bike", "Rickshaw"];
+export const documentTypes = [
+    "aadhaarcard",
+    "pancard",
+    "drivingLicence",
+    "vehicleRegistration",
+    "insurance",
+    "driverPhoto",
+    "vehiclePermit"
+];
