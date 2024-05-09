@@ -46,11 +46,11 @@ const register = asyncHandler(async (req: Request, res: Response) => {
     userName = userName.replace(/\s/g, '');
 
     // check if user already exists
-    const user = await User.findOne({ $or: [{ email }, { userName }] });
-    // if (isExistingUser) throw new ApiError(409, "User already exists");
+    const isExistingUser = await User.findOne({ $or: [{ email }, { userName }] });
+    if (isExistingUser) throw new ApiError(409, "User already exists");
 
     // create new user
-    // const user = await User.create({ userName, email, password });
+    const user = await User.create({ userName, email, password });
     // email verification prcocess-otp
     const unHashedToken = await user.generateTemporaryToken();
     const data = {

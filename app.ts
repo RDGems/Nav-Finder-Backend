@@ -51,7 +51,7 @@ const corsOptions = {
     exposedHeaders: ["set-cookie"],
     optionsSuccessStatus: 200,
 };
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(cors());
 // data from body
 app.use(express.json({ limit: '16kb' }));
@@ -75,7 +75,6 @@ app.use('/api/v1/driver', verifyToken, driverRoutes);
 const PORT = process.env.PORT || 5000;
 
 const start = async () => {
-    console.log(process.env.WHITELIST?.split(","))
     try {
         await dbConnect();
         app.listen(PORT, () => {
