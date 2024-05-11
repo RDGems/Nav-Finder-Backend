@@ -2,8 +2,16 @@ import { Express, Request, Response } from "express";
 import path from "path";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-
+require('dotenv').config({ path: '.env' });
 // create options for swaggerJsdoc options
+let apisPath;
+if(process.env.NODE_ENV == "PROD"){
+    apisPath = [path.resolve(__dirname, '../../../swagger.yaml')];
+}
+else{
+    apisPath = [path.resolve(__dirname, '../../swagger.yaml')];
+}
+
 const options: swaggerJsdoc.Options = {
     definition: {
         openapi: "3.0.0",
@@ -25,7 +33,7 @@ const options: swaggerJsdoc.Options = {
             { bearerAuth: [], }
         ]
     },
-    apis: [path.resolve(__dirname, '../../swagger.yaml')],
+    apis:apisPath
 };
 
 const swaggerSPec = swaggerJsdoc(options);
