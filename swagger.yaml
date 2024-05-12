@@ -1473,4 +1473,484 @@ paths:
                     type: string
                     example: "Driver Photo Uploaded Successful"
 
+# create a valid driver after validation
+  /api/v1/driver/createDriver:
+    post:
+      summary: Create a new driver
+      tags:
+        - 🚗 Driver
+      description: This endpoint creates a new driver with the provided userId.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: The ID of the driver to be created.
+                  example: "663cbc32c9f5980d24aa385d"
+      responses:
+        '200':
+          description: Successfully created driver profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      driverDetail:
+                        type: string
+                        example: "663cbc32c9f5980d24aa385d"
+                      documents:
+                        type: object
+                        properties:
+                          aadhaarcard:
+                            type: object
+                            properties:
+                              number:
+                                type: string
+                                example: "123456789"
+                          pancard:
+                            type: object
+                            properties:
+                              number:
+                                type: string
+                                example: "123456789"
+                          drivingLicence:
+                            type: object
+                            properties:
+                              number:
+                                type: string
+                                example: "123456789"
+                              expiryDate:
+                                type: string
+                                format: date-time
+                                example: "2025-12-31T00:00:00.000Z"
+                          vehicleRegistration:
+                            type: object
+                            properties:
+                              number:
+                                type: string
+                                example: "123456789"
+                              expiryDate:
+                                type: string
+                                format: date-time
+                                example: "2025-12-31T00:00:00.000Z"
+                          insurance:
+                            type: object
+                            properties:
+                              number:
+                                type: string
+                                example: "123456789"
+                              expiryDate:
+                                type: string
+                                format: date-time
+                                example: "2025-12-31T00:00:00.000Z"
+                          driverPhoto:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                                example: "664075ea570987f4fc85546e"
+                          vehiclePermit:
+                            type: object
+                            properties:
+                              ownerName:
+                                type: string
+                                example: "John Doe"
+                              number:
+                                type: string
+                                example: "123456789"
+                              expiryDate:
+                                type: string
+                                format: date-time
+                                example: "2025-12-31T00:00:00.000Z"
+                      vehicleType:
+                        type: string
+                        example: "Car"
+                      averageRating:
+                        type: number
+                        example: 0
+                      totalRatings:
+                        type: number
+                        example: 0
+                      drivingHistory:
+                        type: object
+                        properties:
+                          trafficViolations:
+                            type: array
+                            items:
+                              type: string
+                            example: []
+                      availability:
+                        type: boolean
+                        example: false
+                      onlineStatus:
+                        type: boolean
+                        example: false
+                      complaints:
+                        type: array
+                        items:
+                          type: string
+                        example: []
+                      tripHistory:
+                        type: array
+                        items:
+                          type: string
+                        example: []
+                      lastKnownLocation:
+                        type: object
+                        properties:
+                          location:
+                            type: object
+                            properties:
+                              coordinates:
+                                type: array
+                                items:
+                                  type: number
+                                example: []
+                      preferredWorkingArea:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            example: "New York City"
+                          location:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                                example: "Point"
+                              coordinates:
+                                type: array
+                                items:
+                                  type: number
+                                example: [40.7128, -74.006]
+                      stage:
+                        type: string
+                        example: "driverPhoto"
+                      _id:
+                        type: string
+                        example: "6640794026e21fa24f301037"
+                      createdAt:
+                        type: string
+                        format: date-time
+                        example: "2024-05-12T08:09:36.819Z"
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        example: "2024-05-12T08:09:36.819Z"
+                      __v:
+                        type: number
+                        example: 0
+                  message:
+                    type: string
+                    example: "Successfully created driver profile"
+                  success:
+                    type: boolean
+                    example: true
 
+
+# Rides docs start here
+/api/v1/finder/getAfterLocation:
+  post:
+    tags:
+      - "👨‍💼 Rides"
+    summary: Calculate fare details for different vehicle types
+    description: >-
+      This endpoint calculates the fare details for different vehicle types
+      based on the provided distance and travel time.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              distance:
+                type: number
+                description: The distance of the ride.
+                example: 10.5
+              travelTime:
+                type: number
+                description: The travel time of the ride.
+                example: 30
+    responses:
+      '200':
+        description: Successfully fetched fare details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      vehicleType:
+                        type: string
+                        example: "CAR"
+                      totalFare:
+                        type: number
+                        example: 150.00
+                      away:
+                        type: number
+                        example: 5
+                message:
+                  type: string
+                  example: Successfully fetched fare details
+                success:
+                  type: boolean
+                  example: true
+
+# book a ride with us
+/api/v1/finder/bookRide:
+  post:
+    tags:
+      - "👨‍💼 Rides"
+    summary: Book a ride
+    description: >-
+      This endpoint books a ride with the provided user, driver, pickup location, dropoff location, estimated fare, vehicle type, payment method, distance, and duration.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user:
+                type: string
+                description: The ID of the user booking the ride.
+                example: "123abc"
+              driver:
+                type: string
+                description: The ID of the driver for the ride.
+                example: "456def"
+              pickupLocation:
+                type: string
+                description: The pickup location for the ride.
+                example: "Location A"
+              dropoffLocation:
+                type: string
+                description: The dropoff location for the ride.
+                example: "Location B"
+              estimatedFare:
+                type: number
+                description: The estimated fare for the ride.
+                example: 15.00
+              vehicleType:
+                type: string
+                description: The type of vehicle for the ride.
+                example: "Car"
+              paymentMethod:
+                type: string
+                description: The payment method for the ride.
+                example: "credit_card"
+              distance:
+                type: number
+                description: The distance of the ride.
+                example: 10.5
+              duration:
+                type: number
+                description: The duration of the ride.
+                example: 30
+    responses:
+      '200':
+        description: Successfully booked ride
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: "789ghi"
+                    user:
+                      type: string
+                      example: "123abc"
+                    driver:
+                      type: string
+                      example: "456def"
+                    pickupLocation:
+                      type: string
+                      example: "Location A"
+                    dropoffLocation:
+                      type: string
+                      example: "Location B"
+                    rideStatus:
+                      type: string
+                      example: "requested"
+                    estimatedFare:
+                      type: number
+                      example: 15.00
+                    vehicleType:
+                      type: string
+                      example: "Car"
+                    paymentMethod:
+                      type: string
+                      example: "credit_card"
+                    distance:
+                      type: number
+                      example: 10.5
+                    duration:
+                      type: number
+                      example: 30
+                    totalFare:
+                      type: number
+                      example: 17.70
+                message:
+                  type: string
+                  example: "Successfully ride booked"
+                success:
+                  type: boolean
+                  example: true
+
+# get all types of activities
+/api/v1/finder/getRides:
+  get:
+    tags:
+      - "👨‍💼 Rides"
+    summary: Get rides for a user
+    description: >-
+      This endpoint fetches rides for the current user. If rideStatus is provided in the query parameters, it fetches rides with the matching rideStatus. If rideStatus is not provided, it fetches all rides for the user.
+    parameters:
+      - in: query
+        name: rideStatus
+        schema:
+          type: string
+        description: The status of the ride to fetch.
+        example: "requested"
+    responses:
+      '200':
+        description: Successfully fetched rides
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: "789ghi"
+                      user:
+                        type: string
+                        example: "123abc"
+                      driver:
+                        type: string
+                        example: "456def"
+                      pickupLocation:
+                        type: string
+                        example: "Location A"
+                      dropoffLocation:
+                        type: string
+                        example: "Location B"
+                      rideStatus:
+                        type: string
+                        example: "requested"
+                      estimatedFare:
+                        type: number
+                        example: 15.00
+                      vehicleType:
+                        type: string
+                        example: "Car"
+                      paymentMethod:
+                        type: string
+                        example: "credit_card"
+                      distance:
+                        type: number
+                        example: 10.5
+                      duration:
+                        type: number
+                        example: 30
+                      totalFare:
+                        type: number
+                        example: 17.70
+                message:
+                  type: string
+                  example: "Successfully fetched rides"
+                success:
+                  type: boolean
+                  example: true
+
+/api/v1/finder/cancelRide:
+  put:
+    tags:
+      - "👨‍💼 Rides"
+    summary: Cancel a ride
+    description: >-
+      This endpoint cancels a ride with the provided rideId. The rideId is provided in the query parameters. The rideStatus is set to "cancelled" and the cancelledBy field is set to the current user's ID.
+    parameters:
+      - in: query
+        name: rideId
+        schema:
+          type: string
+        description: The ID of the ride to cancel.
+        example: "789ghi"
+    responses:
+      '200':
+        description: Successfully cancelled ride
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: "789ghi"
+                    user:
+                      type: string
+                      example: "123abc"
+                    driver:
+                      type: string
+                      example: "456def"
+                    pickupLocation:
+                      type: string
+                      example: "Location A"
+                    dropoffLocation:
+                      type: string
+                      example: "Location B"
+                    rideStatus:
+                      type: string
+                      example: "cancelled"
+                    cancelledBy:
+                      type: string
+                      example: "123abc"
+                    estimatedFare:
+                      type: number
+                      example: 15.00
+                    vehicleType:
+                      type: string
+                      example: "Car"
+                    paymentMethod:
+                      type: string
+                      example: "credit_card"
+                    distance:
+                      type: number
+                      example: 10.5
+                    duration:
+                      type: number
+                      example: 30
+                    totalFare:
+                      type: number
+                      example: 17.70
+                message:
+                  type: string
+                  example: "Successfully cancelled ride"
+                success:
+                  type: boolean
+                  example: true

@@ -36,3 +36,7 @@ export const documentTypes = [
     "driverPhoto",
     "vehiclePermit"
 ];
+
+export function getRandomInteger() {
+    return Math.floor(Math.random() * 15) + 1;
+}

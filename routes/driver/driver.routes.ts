@@ -1,5 +1,5 @@
 import express from "express";
-import { driverPrefernce, driverVehicleType, uploadDocumentDetails } from "../../controllers/driver/driver.controllers";
+import { createDriver, driverPrefernce, driverVehicleType, uploadDocumentDetails } from "../../controllers/driver/driver.controllers";
 import { aadhaarCardValidator, driverPhotoValidator, driverPrefernceValidator, driverVehicleTypeValidator, drivingLicenceValidator, insuranceValidator, panCardValidator, vehiclePermitValidator, vehicleRegistrationValidator } from "../../validators/driver/driver.validators";
 import { validate } from "../../validators/validate";
 import { driverApiAuthorization } from "../../middlewares/driverApiAuthorizaion";
@@ -19,5 +19,7 @@ driverRoutes.post("/document/drivingLicence", driverApiAuthorization, upload.sin
 driverRoutes.post("/document/insurance", driverApiAuthorization, upload.single('documentImage'), insuranceValidator(), validate, uploadDocumentDetails);
 driverRoutes.post("/document/vehicleRegistration", driverApiAuthorization, upload.single('documentImage'), vehicleRegistrationValidator(), validate, uploadDocumentDetails);
 
+
+driverRoutes.post("/createDriver",  createDriver);
 
 export { driverRoutes }

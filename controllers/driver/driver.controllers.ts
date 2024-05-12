@@ -4,6 +4,8 @@ import { ApiResponse } from "../../utils/error/ApiResponse";
 import { asyncHandler } from '../../utils/error/AsyncHandler';
 import TempDriver from '../../models/driver/tempDriver.models';
 import { AuthRequest, DriverAuthRequest } from '../../utils/allinterfaces';
+import Driver from '../../models/driver/driver.models';
+import User from '../../models/auth/user.models';
 
 
 // preferred place to drive and earn
@@ -86,7 +88,28 @@ const uploadDocumentDetails = asyncHandler(async (req: DriverAuthRequest, res: R
     }
     res.json(new ApiResponse(200, "Success"))
 })
+// create a new Driver after authorization process 
+const createDriver = asyncHandler(async (req: AuthRequest, res: Response) => {
+    const { userId } = req.body;
+    if (!userId) {
+        throw new ApiError(401, "Please proveide the required details", []);
+    }
+    
+    const tempDriver = await TempDriver.findOne({ driverDetail: userId }).select(' -_id -createdAt -updatedAt -__v  ');
+    if (!tempDriver) {
+        throw new ApiError(400, "Driver not found", []);
+    }
+    if (tempDriver.stage != 'driverPhoto') {
+        throw new ApiError(400, "Please complete the previous steps", []);
+    }
+    const existingDriverId=await Driver.findOne({driverDetail:userId});
+    if(existingDriverId){
+        throw new ApiError(400, "Driver already exists", []);
+    }
+    const validatedDriver= await Driver.create(tempDriver.toObject());
+    await User.findByIdAndUpdate(userId,{isDriver:true});
+    return res.json(new ApiResponse(200,validatedDriver,"Successfuly created driver profile"))
+})
 
 
-
-export { driverPrefernce, driverVehicleType, uploadDocumentDetails }
+export { driverPrefernce, driverVehicleType, uploadDocumentDetails ,createDriver}

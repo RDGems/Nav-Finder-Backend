@@ -133,6 +133,10 @@ const userSchema = new Schema({
     forgotPasswordTokenExpiresAt: {
         type: Date,
     },
+    isDriver:{
+        type:Boolean,
+        default:false
+    }
 },
 
     { timestamps: true }
