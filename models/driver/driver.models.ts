@@ -1,8 +1,9 @@
 
 
 import mongoose, { Schema } from "mongoose";
+import Jwt from "jsonwebtoken"
 
-const carSchema = new Schema({
+const vehicalSchema = new Schema({
     manufacturer: { type: String },
     model: { type: String },
     year: { type: Number },
@@ -34,18 +35,18 @@ const driverSchema = new Schema({
         ref: "User"
     },
     documents: {
-        aadhaarNumber: {
+        aadhaarcard: {
             number: { type: String },
-            aadhaarNumberImage: {
+            aadhaarcardImage: {
                 type: {
                     url: String,
                     localPath: String,
                 },
             }
         },
-        panCardNumber: {
+        pancard: {
             number: { type: String },
-            panCardNumberImage: {
+            pancardImage: {
                 type: {
                     url: String,
                     localPath: String,
@@ -92,7 +93,7 @@ const driverSchema = new Schema({
             ownerName: { type: String },
             number: { type: String },
             expiryDate: { type: Date },
-            permitImage: {
+            vehiclePermitImage: {
                 type: {
                     url: String,
                     localPath: String,
@@ -100,7 +101,8 @@ const driverSchema = new Schema({
             }
         }
     },
-    carDetails: carSchema,
+    vehicleType: { type: String, default: 'Car' },
+    carDetails: vehicalSchema,
     averageRating: { type: Number, default: 0 },
     totalRatings: { type: Number, default: 0 },
     drivingHistory: {
@@ -139,8 +141,16 @@ const driverSchema = new Schema({
 
             }
         }
-    }
+    },
+    stage: { type: String, default: null }
 }, { timestamps: true });
+
+driverSchema.methods.generateDriverToken = function () {
+    return Jwt.sign({ user: this.driverDetail, id: this._id }, process.env.JWT_DRIVER_TOKEN_SECRET!, {
+        expiresIn: process.env.JWT_DRIVER_TOKEN_EXPIRY
+    })
+}
 
 const Driver = mongoose.models.driver || mongoose.model("Driver", driverSchema);
 export default Driver;
+
