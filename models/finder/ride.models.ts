@@ -19,7 +19,6 @@ const rideSchema = new Schema({
     distance: { type: Number },
     duration: { type: Number },
     driver: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver' },
-    driverName: { type: String },
     driverVehicle: {
         make: { type: String },
         model: { type: String },
@@ -44,4 +43,4 @@ const rideSchema = new Schema({
 
 const Ride = mongoose.model('Ride', rideSchema);
 
-module.exports = Ride;
+export default Ride;
