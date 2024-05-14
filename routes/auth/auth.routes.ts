@@ -3,7 +3,7 @@ import { verifyToken } from "../../middlewares/verifyToken.middleware";
 import { userLoginValidator, userRegisterValidator, userOnboardingValidator, passwordResetValidators } from "../../validators/auth/user.validators";
 import { validate } from "../../validators/validate";
 import { register, login, logout, refreshTokenGeneration, onboarding, verifyEmail, forgotPassword, resendEmailVerification, resetPassword, changePassword, getCurrentUser, verifyOtp, changeAccountStatus } from "../../controllers/auth/auth.controllers";
-import upload from "../../middlewares/multer.middleware";
+import { upload } from "../../utils/aws/aws.s3.config";
 
 const authRoutes = express.Router();
 
