@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/RDGems/Nav-Finder-Backend#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.574.0",
     "amqplib": "^0.10.4",
     "aws-sdk": "^2.1618.0",
     "bcryptjs": "^2.4.3",
@@ -55,9 +56,11 @@
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.4",
+    "@types/aws-sdk": "^2.7.0",
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/multer": "^1.4.11",
+    "@types/multer-s3": "^3.0.3",
     "@types/node": "^20.5.7",
     "@types/nodemailer": "^6.4.14",
     "@types/otp-generator": "^4.0.2",

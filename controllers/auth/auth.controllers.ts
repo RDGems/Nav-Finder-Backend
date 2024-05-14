@@ -142,12 +142,11 @@ const logout = asyncHandler(async (req: AuthRequest, res: Response) => {
 // Onboarding process for user
 const onboarding = asyncHandler(async (req: AuthRequest, res: Response) => {
     const data: Record<string, any> = { ...req.body };
-    console.log(req.file)
     // Get the schema keys from the User model
     const schemaKeys = Object.keys(User.schema.paths);
 
     // Filter the data to only include keys that exist in the User schema
-
+    let imageUrl;
     const filteredData: Record<string, any> = Object.keys(data)
         .filter(key => schemaKeys.includes(key))
         .reduce((obj: Record<string, any>, key) => {
@@ -158,33 +157,21 @@ const onboarding = asyncHandler(async (req: AuthRequest, res: Response) => {
     if (!onboarderUser) {
         throw new Error('User not found');
     }
+    if(!onboarderUser.isOnboarded){
+        imageUrl = `https://api.dicebear.com/6.x/pixel-art/svg?seed=${onboarderUser.userName}&background=%23000000&radius=50&colorful=1`
+    }
     let isEmailVerifiedValue = true;
     if (onboarderUser.email !== filteredData.email) {
         isEmailVerifiedValue = false;
     }
 
     // upload profile picture to cloudinary
-    let imageUrl = `https://api.dicebear.com/6.x/pixel-art/svg?seed=${onboarderUser.userName}&background=%23000000&radius=50&colorful=1`;
-    if (req?.file?.path) {
-        console.log(req?.file?.path)
-        const result = await uploadToCloudinary(req?.file?.path);
-        if (result) {
-            imageUrl = result;
-        }
-        // delete the file from the local storage
-        if (fs.existsSync(path.join(__dirname, '..', '..', 'public', 'temp', req.file.filename))) {
-            fs.unlink(path.join(__dirname, '..', '..', 'public', 'temp', req.file.filename), err => {
-                if (err) {
-                    console.error("Error deleting file:", err);
-                }
-            });
-        } else {
-            console.log('File does not exist');
-        }
+
+    if(req.file){
+        imageUrl=req.file.location;
     }
     onboarderUser.avatar = {
         url: imageUrl, // the URL of the uploaded image on Cloudinary
-        localPath: req?.file?.path, // the path of the image file on your local server
     };
     await onboarderUser.save();
     //    check that onboarderUser and filteredData.email same or not
