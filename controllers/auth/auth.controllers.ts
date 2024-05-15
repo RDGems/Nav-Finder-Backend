@@ -66,7 +66,7 @@ const register = asyncHandler(async (req: Request, res: Response) => {
     };
 
     // Send the data to the queue
-    sendDataToQueue(JSON.stringify(data));
+    // sendDataToQueue(JSON.stringify(data));
     // send response
     return res.status(200).json(new ApiResponse(200, user, "User Created Successfully"));
 });
@@ -93,29 +93,29 @@ const login = asyncHandler(async (req: Request, res: Response) => {
 
     // const get access and refresh token
     const { accessToken, refreshToken } = await generateAccessRefreshToken(isExistingUser._id);
-
-    const accessOptions = {
-        expires: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour
+    let refreshOptions = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "PROD" ? true : false,
-    };
-
-    const refreshOptions = {
-        expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
+        secure: process.env.NODE_ENV === 'PROD' ? true : false,
+        path: '/',
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), 
+      };
+      
+      let accessOptions = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "PROD" ? true : false,
-    };
+        secure: process.env.NODE_ENV === 'PROD' ? true : false,
+        path: '/',
+        expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
+      };
     let userDetails = await User.findById(isExistingUser._id).select("userName email accountType AccountStatus isOnboarded  avatar ");
     userDetails = userDetails.toObject();
 
-    if (req.headers.origin?.startsWith("http://localhost")) {
-        userDetails.refreshToken = refreshToken;
-        userDetails.accessToken = accessToken;
-    }
+        
 
     // send response
-    return res.status(200).cookie("refreshToken", refreshToken, refreshOptions).
-        cookie("accessToken", accessToken, accessOptions).json(new ApiResponse(200, userDetails, "Login Successful"));
+    return res.status(200)
+    .cookie("refreshToken", refreshToken, refreshOptions)
+    .cookie("accessToken", accessToken, accessOptions)
+    .json(new ApiResponse(200, {...userDetails,accessToken,refreshToken}, "Login Successful"));
 });
 // logout process
 const logout = asyncHandler(async (req: AuthRequest, res: Response) => {

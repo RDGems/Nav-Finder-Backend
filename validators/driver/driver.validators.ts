@@ -52,7 +52,7 @@ const vehiclePermitValidator = () => {
             .trim()
             .notEmpty()
             .withMessage("Document Expiry Date is required"),
-        body('documentImage')
+        body('file')
             .custom((value, { req }) => {
                 if (!req.file) {
                     throw new Error('Image file is required');
@@ -80,7 +80,7 @@ const aadhaarCardValidator = () => {
             .trim()
             .notEmpty()
             .withMessage("Aadhaar Card Number is required"),
-        body('documentImage')
+        body('file')
             .custom((value, { req }) => {
                 if (!req.file) {
                     throw new Error('Image file is required');
@@ -108,7 +108,7 @@ const panCardValidator = () => {
             .trim()
             .notEmpty()
             .withMessage("PAN Card Number is required"),
-        body('documentImage')
+        body('file')
             .custom((value, { req }) => {
                 if (!req.file) {
                     throw new Error('Image file is required');
@@ -141,7 +141,7 @@ const drivingLicenceValidator = () => {
             .trim()
             .notEmpty()
             .withMessage("Driving Licence Expiry Date is required"),
-        body('documentImage')
+        body('file')
             .custom((value, { req }) => {
                 if (!req.file) {
                     throw new Error('Image file is required');
@@ -174,7 +174,7 @@ const vehicleRegistrationValidator = () => {
             .trim()
             .notEmpty()
             .withMessage("Vehicle Registration Expiry Date is required"),
-        body('documentImage')
+        body('file')
             .custom((value, { req }) => {
                 if (!req.file) {
                     throw new Error('Image file is required');
@@ -207,7 +207,7 @@ const insuranceValidator = () => {
             .trim()
             .notEmpty()
             .withMessage("Insurance Expiry Date is required"),
-        body('documentImage')
+        body('file')
             .custom((value, { req }) => {
                 if (!req.file) {
                     throw new Error('Image file is required');
@@ -231,7 +231,7 @@ const driverPhotoValidator = () => {
             .withMessage("Document Type is missing")
             .isIn(documentTypes)
             .withMessage("Document Type is not valid"),
-        body('documentImage')
+        body('file')
             .custom((value, { req }) => {
                 if (!req.file) {
                     throw new Error('Image file is required');

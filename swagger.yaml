@@ -1115,7 +1115,7 @@ paths:
                   type: string
                   format: date
                   example: "2025-12-31"
-                documentImage:
+                file:
                   type: string
                   format: binary
                   description: The image of the document.
@@ -1170,7 +1170,7 @@ paths:
                 documentNumber:
                   type: string
                   example: "123456789"
-                documentImage:
+                file:
                   type: string
                   format: binary
                   description: The image of the document.
@@ -1225,7 +1225,7 @@ paths:
                 documentNumber:
                   type: string
                   example: "123456789"
-                documentImage:
+                file:
                   type: string
                   format: binary
                   description: The image of the document.
@@ -1284,7 +1284,7 @@ paths:
                   type: string
                   format: date
                   example: "2025-12-31"
-                documentImage:
+                file:
                   type: string
                   format: binary
                   description: The image of the document.
@@ -1343,7 +1343,7 @@ paths:
                   type: string
                   format: date
                   example: "2025-12-31"
-                documentImage:
+                file:
                   type: string
                   format: binary
                   description: The image of the document.
@@ -1402,7 +1402,7 @@ paths:
                   type: string
                   format: date
                   example: "2025-12-31"
-                documentImage:
+                file:
                   type: string
                   format: binary
                   description: The image of the document.
@@ -1454,7 +1454,7 @@ paths:
                 documentType:
                   type: string
                   example: "driverPhoto"
-                documentImage:
+                file:
                   type: string
                   format: binary
                   description: The image of the document.
@@ -1475,22 +1475,12 @@ paths:
 
 # create a valid driver after validation
   /api/v1/driver/createDriver:
-    post:
+    get:
       summary: Create a new driver
       tags:
         - 🚗 Driver
       description: This endpoint creates a new driver with the provided userId.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                userId:
-                  type: string
-                  description: The ID of the driver to be created.
-                  example: "663cbc32c9f5980d24aa385d"
+      operationId: createDriver
       responses:
         '200':
           description: Successfully created driver profile
