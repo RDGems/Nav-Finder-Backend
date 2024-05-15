@@ -20,7 +20,6 @@ import { connectQueue, consumeDataFromQueue } from './utils/queue/rabbitmqsetup.
 import { driverRoutes } from './routes/driver/driver.routes';
 import { verifyToken } from './middlewares/verifyToken.middleware';
 import { finderRoutes } from './routes/finder/finder.routes';
-import { lookups } from './controllers/lookups/lookups';
 import { lookupsRoute } from './routes/lookups/lookups.routes';
 // rate limiting
 const rateLimit = require("express-rate-limit");
