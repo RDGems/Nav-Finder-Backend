@@ -76,11 +76,18 @@ const uploadDocumentDetails = asyncHandler(async (req: DriverAuthRequest, res: R
     if (url != documentType) {
         throw new ApiError(400, "Invalid document type", []);
     }
+    let imageUrl='';
+    if(req.file){
+        imageUrl=req.file.location;
+    }
     currenntDriver.stage = url;
     currenntDriver.documents[documentType] = {
         ownerName: documentOwnerName,
         number: documentNumber,
-        expiryDate: documentExpiryDate
+        expiryDate: documentExpiryDate,
+        [documentType +"Image"]:{
+                url: imageUrl,
+        }
     };
     const savedTempDriver = await currenntDriver.save();
     if (!savedTempDriver) {
@@ -90,7 +97,8 @@ const uploadDocumentDetails = asyncHandler(async (req: DriverAuthRequest, res: R
 })
 // create a new Driver after authorization process 
 const createDriver = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { userId } = req.body;
+    // const { userId } = req.body;
+    const userId =req.user?.id;
     if (!userId) {
         throw new ApiError(401, "Please proveide the required details", []);
     }

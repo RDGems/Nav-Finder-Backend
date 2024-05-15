@@ -23,12 +23,18 @@ const sendMail = async (options: mailOptions) => {
     // 4. Nodemailer transporter
     const transporter = await nodemailer.createTransport(
         {
-            host: process.env.MAILTRAP_SMTP_HOST!,
-            port: Number(process.env.MAILTRAP_SMTP_PORT!),
+            // host: process.env.MAILTRAP_SMTP_HOST!,
+            // port: Number(process.env.MAILTRAP_SMTP_PORT!),
+            // auth: {
+            //     user: process.env.MAILTRAP_SMTP_USER!,
+            //     pass: process.env.MAILTRAP_SMTP_PASS!
+            // }
+            // host: 'smtp.sendgrid.net',
+            port: 587,
             auth: {
-                user: process.env.MAILTRAP_SMTP_USER!,
-                pass: process.env.MAILTRAP_SMTP_PASS!
-            }
+              user: 'apikey', // Use 'apikey', not your SendGrid username
+              pass: process.env.SENDGRID_API_KEY, // Replace with your SendGrid API key
+            },
         }
     );
     const mail = {
