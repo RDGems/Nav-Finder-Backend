@@ -12,8 +12,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     const modifiedReq = req as modifiedRequest;
 
     // take token from cookies or headers.
-    const token = modifiedReq.cookies?.accessToken || modifiedReq.headers.authorization?.split(" ")[1];
-
+    const token = modifiedReq.cookies?.accessToken || modifiedReq.headers.authorization?.split("Bearer ")[1];
     if (!token) {
         // throw new ApiError(401, "Unauthorized access", []);
         return res.status(401).json({

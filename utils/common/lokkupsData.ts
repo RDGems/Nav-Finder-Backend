@@ -18,6 +18,14 @@ export const lookupData = {
         { "key": "FathersMiddleName", "value": "What is your father's middle name?" },
         { "key": "FavoriteTeacher", "value": "What was the name of your favorite teacher?" },
         { "key": "OTHERS", "value": "Others" }
-    ]
-    
+    ],
+    documents :[
+        { "key": "aadhaarcard", "value": "Aadhaar Card" },
+        { "key": "pancard", "value": "PAN Card" },
+        { "key": "drivingLicence", "value": "Driving License - Front" },
+        { "key": "vehicleRegistration", "value": "Registration Certificate (RC)" },
+        { "key": "insurance", "value": "Vehicle Insurance" },
+        { "key": "driverPhoto", "value": "Profile Photo" },
+        { "key": "vehiclePermit", "value": "Vehicle Permit" }
+    ],
   };

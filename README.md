@@ -7,7 +7,7 @@ Navfinder is a revolutionary travel platform dedicated to streamlining travel lo
 1. Real-time Tracking: Provide users with real-time tracking of their booked rides, allowing them to monitor the location of their driver and estimated time of arrival.
 2. User Convenience: Provide users with a seamless platform to book travel services such as taxis, rental cars, or even flights, making travel planning and booking hassle-free.
 3. User Feedback and Ratings: Incorporate a feedback and rating system for both drivers and passengers to maintain service quality and accountability within the platform.
-4. Integration with External Services: Integrate with external services such as payment gateways, mapping APIs, and many more
+4. Integration with External Services: Integrate with external services such as  mapping APIs, and many more
 5. User-friendly Interface: Develop an intuitive and user-friendly interface for travellers to easily book rides, manage their bookings, and interact with the service.
 
 
