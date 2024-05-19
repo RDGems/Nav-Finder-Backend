@@ -2,9 +2,9 @@
 
 export const lookupData = {
     genders: [
-        { key: 'MALE', value: 'Male' },
-        { key: 'FEMALE', value: 'Female' },
-        { key: 'OTHERS', value: 'Others' },
+        { key: 'Male', value: 'Male' },
+        { key: 'Female', value: 'Female' },
+        { key: 'Others', value: 'Others' },
     ],
     securityQuestions:[
         { "key": "FirstPet", "value": "What is your pet's name?" },
@@ -27,5 +27,72 @@ export const lookupData = {
         { "key": "insurance", "value": "Vehicle Insurance" },
         { "key": "driverPhoto", "value": "Profile Photo" },
         { "key": "vehiclePermit", "value": "Vehicle Permit" }
+    ],
+    documentContents:[
+        { "key": "aadhaarcard", "value": {
+            
+            "content":`Enter your Aadhaar and we'll get your information from UIDAI. By
+            sharing your Aadhar details, you hereby confirm that you have shared
+            such details voluntarily.`,
+            "image":true,
+            "name":false,
+            "expiry":false,
+            "idnumber":true,
+        } },
+        { "key": "pancard", "value": {
+            
+            "content":`Enter your PAN card number and we'll get the required information
+            from the NSDL, or you can upload your PAN card instead.`,
+            "image":true,
+            "name":false,
+            "expiry":false,
+            "idnumber":true,
+        } },
+        { "key": "vehicleRegistration", "value": {
+            
+            "content":`Enter your licence plate number and we'll get the required information
+            from the Vahan and Sarathi portal of MoRTH, or you can upload your
+            Registration Certificate (RC) instead.`,
+            "image":true,
+            "name":true,
+            "expiry":false,
+            "idnumber":true,
+        } },
+        { "key": "insurance", "value": {
+            "content":`Make sure photo is not blurred and these details are clearly visible -
+            Model, Vehicle number, Chasis number, Registration Name, Start Date,
+            Expiry Date, Financier name or Company name. You may need to
+            submit additional photos if your document has multiple pages or
+            sides or if first image was not clear.`,
+            "image":true,
+            "name":true,
+            "expiry":true,
+            "idnumber":true,
+        } },
+        { "key": "vehiclePermit", "value": {
+            
+            "content":`If the vehicle owner name on the vehicle documents is different from mine, then
+            I hereby confirm that I have the vehicle owners consent to drive this vehicle on
+            the navfinder Platform, This declaration can be treated as a No-Objection Certificate (NOC)
+            and releases navfinder from any legal obligations and consequences.`,
+            "image":true,
+            "name":true,
+            "expiry":false,
+            "idnumber":true,
+        } },
+        { "key": "driverPhoto", "value": {
+            
+            "content":`Your profile photo helps people recognize you. Please note that once you submit
+            your profile photo it cannot be changed. 
+            `,
+     
+            "image":true,
+            "name":false,
+            "expiry":false,
+            "idnumber":false,
+        } },
+        
+        
+        
     ],
   };

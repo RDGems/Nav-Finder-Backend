@@ -9,9 +9,6 @@ import { emailVerificationMailgenContents, forgotPasswordMailgenContents, sendMa
 import Jwt, { JwtPayload } from 'jsonwebtoken';
 import otpGenerator from 'otp-generator';
 import path from 'path';
-import fs from 'fs';
-import { uploadToCloudinary } from '../../utils/cloudinary/cloudinary.services';
-import { sendDataToQueue } from '../../utils/queue/rabbitmqsetup.utils';
 // Generate Access and Refresh Token for user
 const generateAccessRefreshToken = async (userId: any) => {
     try {
@@ -64,7 +61,14 @@ const register = asyncHandler(async (req: Request, res: Response) => {
         },
         unHashedToken: unHashedToken
     };
-
+    // Send verification email
+    const verificationUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/verifyEmail/${unHashedToken}`;
+    const mailOptions = {
+        email: user.email,
+        subject: 'Email Verification',
+        mailgenContent: emailVerificationMailgenContents(user.userName, verificationUrl)
+    };
+    await sendMail(mailOptions);
     // Send the data to the queue
     // sendDataToQueue(JSON.stringify(data));
     // send response
@@ -97,25 +101,25 @@ const login = asyncHandler(async (req: Request, res: Response) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'PROD' ? true : false,
         path: '/',
-        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), 
-      };
-      
-      let accessOptions = {
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    };
+
+    let accessOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'PROD' ? true : false,
         path: '/',
         expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
-      };
+    };
     let userDetails = await User.findById(isExistingUser._id).select("userName email accountType AccountStatus isOnboarded  avatar ");
     userDetails = userDetails.toObject();
 
-        
+
 
     // send response
     return res.status(200)
-    .cookie("refreshToken", refreshToken, refreshOptions)
-    .cookie("accessToken", accessToken, accessOptions)
-    .json(new ApiResponse(200, {...userDetails,accessToken,refreshToken}, "Login Successful"));
+        .cookie("accessToken", accessToken, accessOptions)
+        .cookie("refreshToken", refreshToken, refreshOptions)
+        .json(new ApiResponse(200, { ...userDetails, accessToken, refreshToken }, "Login Successful"));
 });
 // logout process
 const logout = asyncHandler(async (req: AuthRequest, res: Response) => {
@@ -157,7 +161,7 @@ const onboarding = asyncHandler(async (req: AuthRequest, res: Response) => {
     if (!onboarderUser) {
         throw new Error('User not found');
     }
-    if(!onboarderUser.isOnboarded){
+    if (!onboarderUser.isOnboarded) {
         imageUrl = `https://api.dicebear.com/6.x/pixel-art/svg?seed=${onboarderUser.userName}&background=%23000000&radius=50&colorful=1`
     }
     let isEmailVerifiedValue = true;
@@ -167,8 +171,8 @@ const onboarding = asyncHandler(async (req: AuthRequest, res: Response) => {
 
     // upload profile picture to cloudinary
 
-    if(req.file){
-        imageUrl=req.file.location;
+    if (req.file) {
+        imageUrl = req.file.location;
     }
     onboarderUser.avatar = {
         url: imageUrl, // the URL of the uploaded image on Cloudinary

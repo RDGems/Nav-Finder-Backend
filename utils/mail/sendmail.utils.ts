@@ -3,86 +3,86 @@ import nodemailer from "nodemailer";
 import { mailOptions } from "../allinterfaces";
 require("dotenv").config();
 
+// Function to send mail using Nodemailer and SendGrid
 const sendMail = async (options: mailOptions) => {
-    // 1. Initialise the mailgen instance with default theme and brand configurations
-
-    const mailGenerator = new Mailgen({
-        theme: "default",
-        product: {
-            name: "NavFinder",
-            link: "Any.com"
+    // Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.sendgrid.net',
+        port: 587,
+        auth: {
+            user: 'apikey', // This is fixed, always 'apikey'
+            pass: process.env.SENDGRID_API_KEY // Your SendGrid API Key
         }
-    })
+    });
 
-    // 2. Generate a plain text version of email for those client which doesn't support html
-    const emailText = mailGenerator.generatePlaintext(options.mailgenContent);
-
-    // 3. Generate a html version
-    const emailHtml = mailGenerator.generate(options.mailgenContent);
-
-    // 4. Nodemailer transporter
-    const transporter = await nodemailer.createTransport(
-        {
-            // host: process.env.MAILTRAP_SMTP_HOST!,
-            // port: Number(process.env.MAILTRAP_SMTP_PORT!),
-            // auth: {
-            //     user: process.env.MAILTRAP_SMTP_USER!,
-            //     pass: process.env.MAILTRAP_SMTP_PASS!
-            // }
-            // host: 'smtp.sendgrid.net',
-            port: 587,
-            auth: {
-              user: 'apikey', // Use 'apikey', not your SendGrid username
-              pass: process.env.SENDGRID_API_KEY, // Replace with your SendGrid API key
-            },
-        }
-    );
+    // Mail content
     const mail = {
         from: process.env.MAIL_FROM,
         to: options.email,
         subject: options.subject,
-        text: emailText,
-        html: emailHtml
-    }
+        html: options.mailgenContent
+    };
+
     try {
+        // Sending mail
         await transporter.sendMail(mail);
+        console.log("Email sent successfully to " + options.email);
     } catch (error) {
-        // As sending email is not strongly coupled to the business logic it is not worth to raise an error when email sending fails
-        // So it's better to fail silently rather than breaking the app
+        console.error("Error sending email: ", error);
         console.log(
-            "Email service failed silently. Make sure you have provided your MAILTRAP credentials in the .env file"
+            "Email service failed silently. Make sure you have provided your SendGrid credentials in the .env file"
         );
-        console.log("Error: ", error);
     }
-}
+};
 
+// Function to generate email verification content using Mailgen
+const emailVerificationMailgenContents = (username: string, verificationUrl: string) => {
+    const mailGenerator = new Mailgen({
+        theme: 'default',
+        product: {
+            name: 'Navfinder',
+            link: 'https://nav-finder-backend.onrender.com/api/docs'
+        }
+        
+    });
 
-const emailVerificationMailgenContents = (username: any, verificationUrl: any) => {
-    return {
+    return mailGenerator.generate({
         body: {
             name: username,
             intro: "Welcome to our app! We're very excited to have you on board.",
             action: {
-                instructions:
-                    "To verify your email please click on the following button:",
+                instructions: "To verify your email please click on the following button:",
                 button: {
                     color: "#22BC66", // Optional action button color
                     text: "Verify your email",
                     link: verificationUrl,
                 },
             },
-            outro:
-                "Need help, or have questions? Just reply to this email, we'd love to help.",
+            outro: "Need help, or have questions? Just reply to this email, we'd love to help.",
+            
         },
-    };
+    });
 };
-const forgotPasswordMailgenContents = (username: any, otp: any) => {
-    return {
+
+// Function to generate forgot password content using Mailgen
+const forgotPasswordMailgenContents = (username: string, otp: string) => {
+    const mailGenerator = new Mailgen({
+        theme: 'default',
+        product: {
+            name: 'Navfinder',
+            link: 'https://nav-finder-backend.onrender.com/api/docs'
+        },
+        
+        
+    });
+
+    return mailGenerator.generate({
         body: {
             name: username,
-            intro: "You have received this email because a password reset request for your account was received. <br><br> <h2 style='color: red;'>Your OTP is: " + otp + "</h2>",
+            intro: `You have received this email because a password reset request for your account was received.<br><br> <h2 style='color: red;'>Your OTP is: ${otp}</h2>`,
             outro: "If you did not request a password reset, no further action is required on your part.",
         },
-    };
+    });
 };
-export { sendMail, emailVerificationMailgenContents, forgotPasswordMailgenContents }
+
+export { sendMail, emailVerificationMailgenContents, forgotPasswordMailgenContents };
