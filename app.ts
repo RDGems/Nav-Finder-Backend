@@ -21,6 +21,7 @@ import { driverRoutes } from './routes/driver/driver.routes';
 import { verifyToken } from './middlewares/verifyToken.middleware';
 import { finderRoutes } from './routes/finder/finder.routes';
 import { lookupsRoute } from './routes/lookups/lookups.routes';
+import { paymentRoute } from './routes/payment/paymants.routes';
 // rate limiting
 const rateLimit = require("express-rate-limit");
 
@@ -72,6 +73,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1',lookupsRoute)
 app.use('/api/v1/driver', verifyToken, driverRoutes);
 app.use('/api/v1/finder', verifyToken, finderRoutes);
+app.use('/api/v1/payments', verifyToken, paymentRoute);
 
 
 

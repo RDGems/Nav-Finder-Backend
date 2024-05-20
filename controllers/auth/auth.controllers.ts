@@ -110,7 +110,7 @@ const login = asyncHandler(async (req: Request, res: Response) => {
         path: '/',
         expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000)
     };
-    let userDetails = await User.findById(isExistingUser._id).select("userName email accountType AccountStatus isOnboarded  avatar ");
+    let userDetails = await User.findById(isExistingUser._id).select("userName email accountType AccountStatus isOnboarded isEmailVerified avatar firstName lastName");
     userDetails = userDetails.toObject();
 
 

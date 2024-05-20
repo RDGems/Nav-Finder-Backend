@@ -45,7 +45,7 @@ const rideSchema = new Schema({
         ref:'User',
         default :null
     }
-});
+},{ timestamps: true });
 
 const Ride = mongoose.model('Ride', rideSchema);
 
