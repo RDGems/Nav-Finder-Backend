@@ -1,5 +1,5 @@
 import express from 'express';
-import { afterLocation, bookRide, cancelRide, getRides } from '../../controllers/finder/finder.conntrollers';
+import { afterLocation, bookRide, cancelRide, getRides } from '../../controllers/finder/finder.controllers';
 import { createDriver } from '../../controllers/driver/driver.controllers';
 const finderRoutes=express.Router();
 
