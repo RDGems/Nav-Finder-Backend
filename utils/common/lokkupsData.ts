@@ -6,7 +6,7 @@ export const lookupData = {
         { key: 'Female', value: 'Female' },
         { key: 'Others', value: 'Others' },
     ],
-    securityQuestions:[
+    securityQuestions: [
         { "key": "FirstPet", "value": "What is your pet's name?" },
         { "key": "FirstCar", "value": "What was the make and model of your first car?" },
         { "key": "ChildhoodStreet", "value": "What was the name of the street where you grew up?" },
@@ -19,7 +19,7 @@ export const lookupData = {
         { "key": "FavoriteTeacher", "value": "What was the name of your favorite teacher?" },
         { "key": "OTHERS", "value": "Others" }
     ],
-    documents :[
+    documents: [
         { "key": "aadhaarcard", "value": "Aadhaar Card" },
         { "key": "pancard", "value": "PAN Card" },
         { "key": "drivingLicence", "value": "Driving License - Front" },
@@ -28,71 +28,115 @@ export const lookupData = {
         { "key": "driverPhoto", "value": "Profile Photo" },
         { "key": "vehiclePermit", "value": "Vehicle Permit" }
     ],
-    documentContents:[
-        { "key": "aadhaarcard", "value": {
-            
-            "content":`Enter your Aadhaar and we'll get your information from UIDAI. By
+    documentContents: [
+        {
+            "key": "aadhaarcard", "value": {
+
+                "content": `Enter your Aadhaar and we'll get your information from UIDAI. By
             sharing your Aadhar details, you hereby confirm that you have shared
             such details voluntarily.`,
-            "image":true,
-            "name":false,
-            "expiry":false,
-            "idnumber":true,
-        } },
-        { "key": "pancard", "value": {
-            
-            "content":`Enter your PAN card number and we'll get the required information
+                "image": true,
+                "name": false,
+                "expiry": false,
+                "idnumber": true,
+            }
+        },
+        {
+            "key": "pancard", "value": {
+
+                "content": `Enter your PAN card number and we'll get the required information
             from the NSDL, or you can upload your PAN card instead.`,
-            "image":true,
-            "name":false,
-            "expiry":false,
-            "idnumber":true,
-        } },
-        { "key": "vehicleRegistration", "value": {
-            
-            "content":`Enter your licence plate number and we'll get the required information
+                "image": true,
+                "name": false,
+                "expiry": false,
+                "idnumber": true,
+            }
+        },
+        {
+            "key": "vehicleRegistration", "value": {
+
+                "content": `Enter your licence plate number and we'll get the required information
             from the Vahan and Sarathi portal of MoRTH, or you can upload your
             Registration Certificate (RC) instead.`,
-            "image":true,
-            "name":true,
-            "expiry":false,
-            "idnumber":true,
-        } },
-        { "key": "insurance", "value": {
-            "content":`Make sure photo is not blurred and these details are clearly visible -
+                "image": true,
+                "name": true,
+                "expiry": false,
+                "idnumber": true,
+            }
+        },
+        {
+            "key": "insurance", "value": {
+                "content": `Make sure photo is not blurred and these details are clearly visible -
             Model, Vehicle number, Chasis number, Registration Name, Start Date,
             Expiry Date, Financier name or Company name. You may need to
             submit additional photos if your document has multiple pages or
             sides or if first image was not clear.`,
-            "image":true,
-            "name":true,
-            "expiry":true,
-            "idnumber":true,
-        } },
-        { "key": "vehiclePermit", "value": {
-            
-            "content":`If the vehicle owner name on the vehicle documents is different from mine, then
+                "image": true,
+                "name": true,
+                "expiry": true,
+                "idnumber": true,
+            }
+        },
+        {
+            "key": "vehiclePermit", "value": {
+
+                "content": `If the vehicle owner name on the vehicle documents is different from mine, then
             I hereby confirm that I have the vehicle owners consent to drive this vehicle on
             the navfinder Platform, This declaration can be treated as a No-Objection Certificate (NOC)
             and releases navfinder from any legal obligations and consequences.`,
-            "image":true,
-            "name":true,
-            "expiry":false,
-            "idnumber":true,
-        } },
-        { "key": "driverPhoto", "value": {
-            
-            "content":`Your profile photo helps people recognize you. Please note that once you submit
+                "image": true,
+                "name": true,
+                "expiry": false,
+                "idnumber": true,
+            }
+        },
+        {
+            "key": "driverPhoto", "value": {
+
+                "content": `Your profile photo helps people recognize you. Please note that once you submit
             your profile photo it cannot be changed. 
             `,
-     
-            "image":true,
-            "name":false,
-            "expiry":false,
-            "idnumber":false,
-        } },
-        
-        
-        
+
+                "image": true,
+                "name": false,
+                "expiry": false,
+                "idnumber": false,
+            }
+        },
+
+
+
     ],
-  };
+    vehicleTypes: [
+        {
+            'vehicleType': "Car",
+            'id': 1,
+            'image': "uberGo",
+            'title': "Drive four whellers with ease"
+        },
+        {
+            'vehicleType': "Bike",
+            'id': 2,
+            'image': "bike",
+            'title': "Bike with white number plate"
+        },
+        {
+            'vehicleType': "Bike",
+            'id': 3,
+            'image': "bike",
+            'title': "Bike with white number plate"
+        },
+        {
+            'vehicleType': "Rickshaw",
+            'id': 4,
+            'image': "rickshaw",
+            'title': "Drives took took with ease"
+        },
+        {
+            'vehicleType': "Bus",
+            'id': 5,
+            'image': "bus",
+            'title': "Experienced bus driver"
+        }
+    ]
+};

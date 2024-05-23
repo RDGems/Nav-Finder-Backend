@@ -62,17 +62,21 @@ const register = asyncHandler(async (req: Request, res: Response) => {
         unHashedToken: unHashedToken
     };
     // Send verification email
-    const verificationUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/verifyEmail/${unHashedToken}`;
+    let otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
+        console.log(otp)
+        // Store the OTP in the user's document for later verification
+        user.otp = otp;
+        await user.save();
     const mailOptions = {
         email: user.email,
         subject: 'Email Verification',
-        mailgenContent: emailVerificationMailgenContents(user.userName, verificationUrl)
+        mailgenContent: emailVerificationMailgenContents(user.userName, otp)
     };
     await sendMail(mailOptions);
     // Send the data to the queue
     // sendDataToQueue(JSON.stringify(data));
     // send response
-    return res.status(200).json(new ApiResponse(200, user, "User Created Successfully"));
+    return res.status(200).json(new ApiResponse(200, user, "Please verify your email through otp"));
 });
 // Login user process
 const login = asyncHandler(async (req: Request, res: Response) => {

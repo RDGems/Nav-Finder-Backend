@@ -35,7 +35,7 @@ const driverPrefernce = asyncHandler(async (req: AuthRequest, res: Response) => 
         throw new ApiError(400, "Error while saving the data", []);
     }
     const driverToken = await savedTempDriver.generateDriverToken();
-    res.json(new ApiResponse(200, "Success", driverToken))
+    res.json(new ApiResponse(200,  driverToken,"Success"))
 })
 // driver vehicle type 
 const driverVehicleType = asyncHandler(async (req: DriverAuthRequest, res: Response) => {

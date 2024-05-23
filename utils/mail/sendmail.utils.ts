@@ -36,14 +36,13 @@ const sendMail = async (options: mailOptions) => {
 };
 
 // Function to generate email verification content using Mailgen
-const emailVerificationMailgenContents = (username: string, verificationUrl: string) => {
+const emailVerificationMailgenContents = (username: string,otp: string) => {
     const mailGenerator = new Mailgen({
         theme: 'default',
         product: {
             name: 'Navfinder',
             link: 'https://nav-finder-backend.onrender.com/api/docs'
         }
-        
     });
 
     return mailGenerator.generate({
@@ -51,15 +50,14 @@ const emailVerificationMailgenContents = (username: string, verificationUrl: str
             name: username,
             intro: "Welcome to our app! We're very excited to have you on board.",
             action: {
-                instructions: "To verify your email please click on the following button:",
+                instructions: "To verify your account, please use the following OTP:",
                 button: {
                     color: "#22BC66", // Optional action button color
-                    text: "Verify your email",
-                    link: verificationUrl,
+                    text: `OTP: ${otp}`,
+                    link: '#', // You can replace this with a link to a page where the user can enter the OTP
                 },
             },
             outro: "Need help, or have questions? Just reply to this email, we'd love to help.",
-            
         },
     });
 };

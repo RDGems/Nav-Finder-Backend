@@ -28,7 +28,7 @@ const rateLimit = require("express-rate-limit");
 // Configure rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // Define the duration of the window in milliseconds. Here it's set to 15 minutes.
-    max: 100, // Define the maximum number of requests that each IP can make per window. Here it's set to 100.
+    max: 250, // Define the maximum number of requests that each IP can make per window. Here it's set to 100.
     message: "Too many requests from this IP, please try again after 15 minutes", // Customize the message returned when the max limit is exceeded.
     headers: true, // Whether to include rate limit headers in the response. This can be useful for client-side rate limit handling.
     draft_polli_ratelimit_headers: true, // Whether to include the non-standard `RateLimit-*` headers.
