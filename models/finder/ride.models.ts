@@ -14,6 +14,10 @@ const rideSchema = new Schema({
         placeId: String,
         formattedAddress: String
     },
+    carNumber:{
+        type:String,
+        default:null
+    },
     rideType: { type: String, enum: ['standard', 'premium'], default: 'standard' },
     rideStatus: { type: String, enum: ['requested', 'accepted', 'in_progress', 'completed','cancelled'], default: 'requested' },
     estimatedFare: { type: Number },

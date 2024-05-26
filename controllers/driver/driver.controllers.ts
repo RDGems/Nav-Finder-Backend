@@ -6,7 +6,8 @@ import TempDriver from '../../models/driver/tempDriver.models';
 import { AuthRequest, DriverAuthRequest } from '../../utils/allinterfaces';
 import Driver from '../../models/driver/driver.models';
 import User from '../../models/auth/user.models';
-
+import { addMonths, isAfter } from 'date-fns';
+import { driverVerificationMailgenContents,sendMail } from '../../utils/mail/sendmail.utils';
 
 // preferred place to drive and earn
 const driverPrefernce = asyncHandler(async (req: AuthRequest, res: Response) => {
@@ -35,7 +36,7 @@ const driverPrefernce = asyncHandler(async (req: AuthRequest, res: Response) => 
         throw new ApiError(400, "Error while saving the data", []);
     }
     const driverToken = await savedTempDriver.generateDriverToken();
-    res.json(new ApiResponse(200,  driverToken,"Success"))
+    res.json(new ApiResponse(200, driverToken, "Success"))
 })
 // driver vehicle type 
 const driverVehicleType = asyncHandler(async (req: DriverAuthRequest, res: Response) => {
@@ -76,17 +77,24 @@ const uploadDocumentDetails = asyncHandler(async (req: DriverAuthRequest, res: R
     if (url != documentType) {
         throw new ApiError(400, "Invalid document type", []);
     }
-    let imageUrl='';
-    if(req.file){
-        imageUrl=req.file.location;
+    if (documentExpiryDate) {
+        const expiryDate = new Date(documentExpiryDate);
+        const sixMonthsFromNow = addMonths(new Date(), 6);
+        if (!isAfter(expiryDate, sixMonthsFromNow)) {
+            throw new ApiError(400, "Expiry date should be at least 6 months from today", []);
+        }
+    }
+    let imageUrl = '';
+    if (req.file) {
+        imageUrl = req.file.location;
     }
     currenntDriver.stage = url;
     currenntDriver.documents[documentType] = {
         ownerName: documentOwnerName,
         number: documentNumber,
         expiryDate: documentExpiryDate,
-        [documentType +"Image"]:{
-                url: imageUrl,
+        [documentType + "Image"]: {
+            url: imageUrl,
         }
     };
     const savedTempDriver = await currenntDriver.save();
@@ -97,27 +105,52 @@ const uploadDocumentDetails = asyncHandler(async (req: DriverAuthRequest, res: R
 })
 // create a new Driver after authorization process 
 const createDriver = asyncHandler(async (req: AuthRequest, res: Response) => {
-    // const { userId } = req.body;
-    const userId =req.user?.id;
+        const userId = req.user?.id;
+        if (!userId) {
+            throw new ApiError(401, "Please provide the required details", []);
+        }
+    
+        const tempDriver = await TempDriver.findOne({ driverDetail: userId }).select(' -_id -createdAt -updatedAt -__v  ');
+        if (!tempDriver) {
+            throw new ApiError(400, "Driver not found", []);
+        }
+        if (tempDriver.stage != 'driverPhoto') {
+            throw new ApiError(400, "Please complete the previous steps", []);
+        }
+        const existingDriverId = await Driver.findOne({ driverDetail: userId });
+        if (existingDriverId) {
+            throw new ApiError(400, "Driver already exists", []);
+        }
+        const validatedDriver = await Driver.create(tempDriver.toObject());
+        await User.findByIdAndUpdate(userId, { isDriver: true });
+    
+        // Fetch the user's email
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new ApiError(400, "User not found", []);
+        }
+    
+        // Generate the email content
+        const mailOptions = {
+            email: user.email,
+            subject: 'Driver Verification Successull',
+            mailgenContent: driverVerificationMailgenContents(user.userName)
+        };
+    
+        // Send the email
+        await sendMail(mailOptions);
+    return res.json(new ApiResponse(200, validatedDriver, "Successfuly created driver profile"))
+})
+const deleteDriver = asyncHandler(async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.id;
     if (!userId) {
         throw new ApiError(401, "Please proveide the required details", []);
     }
-    
-    const tempDriver = await TempDriver.findOne({ driverDetail: userId }).select(' -_id -createdAt -updatedAt -__v  ');
+    const tempDriver = await TempDriver.findOneAndDelete({ driverDetail: userId })
     if (!tempDriver) {
         throw new ApiError(400, "Driver not found", []);
     }
-    if (tempDriver.stage != 'driverPhoto') {
-        throw new ApiError(400, "Please complete the previous steps", []);
-    }
-    const existingDriverId=await Driver.findOne({driverDetail:userId});
-    if(existingDriverId){
-        throw new ApiError(400, "Driver already exists", []);
-    }
-    const validatedDriver= await Driver.create(tempDriver.toObject());
-    await User.findByIdAndUpdate(userId,{isDriver:true});
-    return res.json(new ApiResponse(200,validatedDriver,"Successfuly created driver profile"))
+    return res.json(new ApiResponse(200, [], "Successfuly deleted driver profile"))
 })
 
-
-export { driverPrefernce, driverVehicleType, uploadDocumentDetails ,createDriver}
+export { driverPrefernce, driverVehicleType, uploadDocumentDetails, createDriver ,deleteDriver}

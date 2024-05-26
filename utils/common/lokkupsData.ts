@@ -25,8 +25,8 @@ export const lookupData = {
         { "key": "drivingLicence", "value": "Driving License - Front" },
         { "key": "vehicleRegistration", "value": "Registration Certificate (RC)" },
         { "key": "insurance", "value": "Vehicle Insurance" },
+        { "key": "vehiclePermit", "value": "Vehicle Permit" },
         { "key": "driverPhoto", "value": "Profile Photo" },
-        { "key": "vehiclePermit", "value": "Vehicle Permit" }
     ],
     documentContents: [
         {
@@ -60,7 +60,7 @@ export const lookupData = {
             Registration Certificate (RC) instead.`,
                 "image": true,
                 "name": true,
-                "expiry": false,
+                "expiry": true,
                 "idnumber": true,
             }
         },
@@ -86,7 +86,18 @@ export const lookupData = {
             and releases navfinder from any legal obligations and consequences.`,
                 "image": true,
                 "name": true,
-                "expiry": false,
+                "expiry": true,
+                "idnumber": true,
+            }
+        },
+        {
+            "key": "drivingLicence", "value": {
+
+                "content": `Your driving license is essential for verifying your eligibility to drive. Please ensure that the details are clearly visible in the uploaded image. Note that once you submit your driving license, it cannot be changed unless it's expired or renewed.`,
+
+                "image": true,
+                "name": false,
+                "expiry": true,
                 "idnumber": true,
             }
         },
@@ -102,8 +113,7 @@ export const lookupData = {
                 "expiry": false,
                 "idnumber": false,
             }
-        },
-
+        }
 
 
     ],

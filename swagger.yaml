@@ -1475,7 +1475,7 @@ paths:
 
 # create a valid driver after validation
   /api/v1/driver/createDriver:
-    get:
+    post:
       summary: Create a new driver
       tags:
         - 🚗 Driver
@@ -1643,7 +1643,27 @@ paths:
                   success:
                     type: boolean
                     example: true
-
+/api/v1/driver/deleteDriver:
+  delete:
+    summary: Delete a driver
+    tags:
+      - 🚗 Driver
+    description: This endpoint deletes the driver profile of the currently logged in user.
+    operationId: deleteDriver
+    responses:
+      '200':
+        description: Successfully deleted driver profile
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Successfully deleted driver profile"
+                success:
+                  type: boolean
+                  example: true
 
 # Rides docs start here
 /api/v1/finder/getAfterLocation:
@@ -1810,14 +1830,7 @@ paths:
       - "👨‍💼 Rides"
     summary: Get rides for a user
     description: >-
-      This endpoint fetches rides for the current user. If rideStatus is provided in the query parameters, it fetches rides with the matching rideStatus. If rideStatus is not provided, it fetches all rides for the user.
-    parameters:
-      - in: query
-        name: rideStatus
-        schema:
-          type: string
-        description: The status of the ride to fetch.
-        example: "requested"
+      This endpoint fetches all previous rides for the current user in ascending order (i.e., oldest to newest). The user must be logged in to fetch rides.
     responses:
       '200':
         description: Successfully fetched rides
@@ -1826,6 +1839,9 @@ paths:
             schema:
               type: object
               properties:
+                code:
+                  type: number
+                  example: 200
                 data:
                   type: array
                   items:
@@ -1870,27 +1886,32 @@ paths:
                 message:
                   type: string
                   example: "Successfully fetched rides"
-                success:
-                  type: boolean
-                  example: true
-
-/api/v1/finder/cancelRide:
+      '401':
+        description: Unauthorized. User must be logged in to fetch rides.
+/api/v1/finder/rideActions:
   put:
     tags:
       - "👨‍💼 Rides"
-    summary: Cancel a ride
+    summary: Cancel or accept a ride
     description: >-
-      This endpoint cancels a ride with the provided rideId. The rideId is provided in the query parameters. The rideStatus is set to "cancelled" and the cancelledBy field is set to the current user's ID.
+      This endpoint updates a ride with the provided rideId. The rideId and type are provided in the query parameters. The rideStatus is set to the provided type ("cancelled" or "accepted") and if the ride is cancelled, the cancelledBy field is set to the current user's ID.
     parameters:
       - in: query
         name: rideId
         schema:
           type: string
-        description: The ID of the ride to cancel.
+        description: The ID of the ride to update.
         example: "789ghi"
+      - in: query
+        name: type
+        schema:
+          type: string
+          enum: ["cancelled", "accepted"]
+        description: The new status of the ride.
+        example: "cancelled"
     responses:
       '200':
-        description: Successfully cancelled ride
+        description: Successfully updated ride
         content:
           application/json:
             schema:
@@ -1940,11 +1961,10 @@ paths:
                       example: 17.70
                 message:
                   type: string
-                  example: "Successfully cancelled ride"
+                  example: "Successfully updated ride"
                 success:
                   type: boolean
                   example: true
-
 
 
 # Transactions Apis

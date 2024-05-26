@@ -63,7 +63,6 @@ const register = asyncHandler(async (req: Request, res: Response) => {
     };
     // Send verification email
     let otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
-        console.log(otp)
         // Store the OTP in the user's document for later verification
         user.otp = otp;
         await user.save();
@@ -172,7 +171,13 @@ const onboarding = asyncHandler(async (req: AuthRequest, res: Response) => {
     if (onboarderUser.email !== filteredData.email) {
         isEmailVerifiedValue = false;
     }
-
+    const dob = new Date(onboarderUser.dob); // replace with the actual date of birth
+    const eighteenYearsAgo = new Date();
+    eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+    
+    if (dob > eighteenYearsAgo) {
+        throw new ApiError(404, "User is not 18 years old yet'", []);
+    }
     // upload profile picture to cloudinary
 
     if (req.file) {

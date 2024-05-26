@@ -6,16 +6,31 @@ import Ride from '../../models/finder/ride.models';
 import { getRandomInteger } from '../../utils/common/model.constants';
 import { AuthRequest } from '../../utils/common/allInterface';
 import Driver from '../../models/driver/driver.models';
+import mongoose from 'mongoose';
+import otpGenerator from 'otp-generator';
+import { rideBookingConfirmationMailgenContents, sendMail } from '../../utils/mail/sendmail.utils';
+import User from '../../models/auth/user.models';
+interface rideDetails {
+    driverDetail: {
+        userName: string,
+        mobile: string,
+        email: string,
+        avatar: {
+            url: string
+        }
+
+    }
+}
 
 // send details of car and price to user
 const afterLocation = asyncHandler(async (req: Request, res: Response) => {
     const { distance, travelTime } = req.body;
-    console.log(distance,travelTime)
+    console.log(distance, travelTime)
     if (!distance || !travelTime) {
         throw new ApiError(400, 'Missing required fields', []);
     }
     const options = [
-        
+
         {
             vehicleType: "Nav Go",
             totalFare: distance * 7 + travelTime * .7 + 96,
@@ -89,7 +104,11 @@ const afterLocation = asyncHandler(async (req: Request, res: Response) => {
     return res.json(new ApiResponse(200, options, "Successfully fetched fare details"))
 });
 
-
+// create a falke car number 
+const createCarNumber = (pickupLocation: string) => {
+    const carNumber = otpGenerator.generate(8, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: true, specialChars: false });
+    return ((pickupLocation.substring(0, 2)).toUpperCase() + carNumber);
+}
 // book a ride
 const bookRide = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { pickupLocation, dropoffLocation, estimatedFare, vehicleType, paymentMethod, distance, duration } = req.body;
@@ -106,6 +125,8 @@ const bookRide = asyncHandler(async (req: AuthRequest, res: Response) => {
 
     // Select a random driver
     const driver = drivers[Math.floor(Math.random() * drivers.length)];
+    const carNumber = createCarNumber(pickupLocation.type);
+    const driverDetails = await User.findById(driver.driverDetail)
 
     const newRide = await Ride.create({
         user,
@@ -118,39 +139,84 @@ const bookRide = asyncHandler(async (req: AuthRequest, res: Response) => {
         paymentMethod,
         distance,
         duration,
+        carNumber,
         totalFare: estimatedFare + estimatedFare * 0.18,
     });
-
+    let otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
+    const currentUser = await User.findByIdAndUpdate(user, { otp: otp }, { new: true })
+    if (currentUser && driverDetails) {
+        const mailOptions = {
+            email: currentUser.email,
+            subject: 'Ride Booking Confirmation',
+            mailgenContent: rideBookingConfirmationMailgenContents(currentUser.userName, driverDetails.userName, carNumber, driverDetails.mobile, driverDetails.avatar.url, otp)
+        }
+        await sendMail(mailOptions);
+    }
     return res.json(new ApiResponse(200, newRide, "Successfully ride booked"));
 });
 
 // get all rides/activities
 const getRides = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const userId = req.user?.id;
-    const rideStatus = req.query.rideStatus;
-    console.log(userId)
-    const pipeline = [];
-    if (userId) {
-        pipeline.push({ $match: { user: userId } });
+    const userId = req.user?.id as string;
+    if (!userId) {
+        throw new ApiError(401, "Login First to continue");
     }
-    if (rideStatus) {
-        pipeline.push({ $match: { rideStatus: rideStatus } });
-    }
-
-    const rides = await Ride.aggregate(pipeline);
-
-    return res.json(new ApiResponse(200, rides, "Successfully fetched rides"))
+    const rides = await Ride.aggregate([
+        { $match: { user: new mongoose.Types.ObjectId(userId) } },
+        { $sort: { createdAt: -1 } },
+        {
+            $lookup: {
+                from: "drivers", // replace with your actual Driver collection name
+                localField: "driver",
+                foreignField: "_id",
+                as: "driver"
+            }
+        },
+        { $unwind: "$driver" },
+        {
+            $lookup: {
+                from: "users", // replace with your actual User collection name
+                localField: "driver.driverDetail",
+                foreignField: "_id",
+                as: "driverDetail"
+            }
+        },
+        { $unwind: "$driverDetail" },
+        {
+            $project: {
+                createdAt: 1,
+                totalFare: 1,
+                estimatedFare:1,
+                rideStatus: 1,
+                paymentStatus: 1,
+                pickupLocation: 1,
+                dropoffLocation: 1,
+                "driverDetail.email": 1,
+                "driverDetail.userName": 1
+            }
+        }, {
+            $group: {
+                _id: "$rideStatus",
+                rides: { $push: "$$ROOT" }
+            }
+        }
+    ]);
+    const acceptedRides = rides.find(group => group._id === 'requested')?.rides || [];
+    const requestedRides = rides.filter(group => group._id !== 'requested').flatMap(group => group.rides);
+    return res.json(new ApiResponse(200, { acceptedRides, requestedRides }, "Successfully fetched rides"))
 });
-
 // cancel a ride
 const cancelRide = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const rideId = req.query.rideId;
+    const { rideId, type } = req.query;
     if (!rideId) {
         throw new ApiError(400, 'Missing required fields', []);
     }
-    const ride = await Ride.findByIdAndUpdate(rideId, { rideStatus: "cancelled", cancelledBy: req.user?.id }, { new: true });
+    if (!type || (type != "cancelled" && type != "accepted")) {
+        throw new ApiError(400, "Not a valid operation", []);
+    }
+    const ride = await Ride.findByIdAndUpdate(rideId, { rideStatus: type, cancelledBy: req.user?.id }, { new: true });
 
-    return res.json(new ApiResponse(200, ride, "Successfully cancelled ride"));
+return res.json(new ApiResponse(200, ride, `Successfully ${type} ride`));
 })
 
 export { bookRide, afterLocation, getRides, cancelRide };

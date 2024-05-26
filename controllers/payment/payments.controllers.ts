@@ -7,6 +7,7 @@ import { instance } from '../../utils/razorpay/razorpay';
 import crypto from 'crypto';
 import { AuthRequest } from '../../utils/allinterfaces';
 import Payment from '../../models/payment/payments.models';
+import Ride from '../../models/finder/ride.models';
 
 
 export const checkout = asyncHandler(async (req: Request, res: Response) => {
@@ -14,6 +15,7 @@ export const checkout = asyncHandler(async (req: Request, res: Response) => {
     if(!amount){
         throw new ApiError(400, 'Amount is required');
     }
+    console.log(amount);
     const options={
         amount:amount*100,
         currency:"INR",
@@ -27,7 +29,8 @@ export const sendApiKey = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const verifyPayment = asyncHandler(async (req: AuthRequest, res: Response) => {
-   const {RazorpayOrderId, RazorpayPaymentId, RazorpaySignature} = req.body;
+   const {RazorpayOrderId, RazorpayPaymentId, RazorpaySignature,rideId} = req.body;
+   console.log(req.body)
     if(!RazorpayOrderId || !RazorpayPaymentId || !RazorpaySignature){
          throw new ApiError(400, 'RazorpayOrderId, RazorpayPaymentId, RazorpaySignature are required');
     }
@@ -44,13 +47,15 @@ export const verifyPayment = asyncHandler(async (req: AuthRequest, res: Response
             paymentId: RazorpayPaymentId,
             amount: req.body.amount, // Assuming you have the amount in req.body.amount
             currency: 'INR', // Assuming the currency is INR
-            status: 'paid', // Assuming the payment is successful
+            status: 'success', // Assuming the payment is successful
             method: req.body.method // Assuming you have the payment method in req.body.method
         });
 
         // Save the payment to the database
         await payment.save();
-        return res.redirect(`http://localhost:3000/paymentSuccess?reference=${RazorpayPaymentId}`);
+        // await Ride.
+        return res.status(200).json(new ApiResponse(200, {message:'Payment successful'},'payments' ));
+        // return res.redirect(`http://localhost:3000/paymentSuccess?reference=${RazorpayPaymentId}`);
     }
 
 });

@@ -82,5 +82,64 @@ const forgotPasswordMailgenContents = (username: string, otp: string) => {
         },
     });
 };
+const driverVerificationMailgenContents = (username: string) => {
+    const mailGenerator = new Mailgen({
+        theme: 'default',
+        product: {
+            name: 'Navfinder',
+            link: 'https://nav-finder-backend.onrender.com/api/docs'
+        }
+    });
 
-export { sendMail, emailVerificationMailgenContents, forgotPasswordMailgenContents };
+    return mailGenerator.generate({
+        body: {
+            name: username,
+            intro: "Congratulations! Your driver account has been successfully created and verified.",
+            action: {
+                instructions: "You can now start accepting rides. Log in to your account to get started.",
+                button: {
+                    color: "#22BC66", // Optional action button color
+                    text: "Log in to your account",
+                    link: 'https://nav-finder-backend.onrender.com/login', // Replace with the actual login URL
+                },
+            },
+            outro: "Need help, or have questions? Just reply to this email, we'd love to help.",
+        },
+    });
+};
+const rideBookingConfirmationMailgenContents = (username: string, driverName: string, carNumber: string, phoneNumber: string, driverPhotoUrl: string, otp: string) => {
+    const mailGenerator = new Mailgen({
+        theme: 'default',
+        product: {
+            name: 'Navfinder',
+            link: 'https://nav-finder-backend.onrender.com/api/docs'
+        }
+    });
+
+    return mailGenerator.generate({
+        body: {
+            name: username,
+            intro: [
+                "Your ride booking has been confirmed! Here are the details of your ride:",
+                `<img src="${driverPhotoUrl}" alt="Driver's Profile Photo" style="width: 100px; height: 100px; border-radius: 50%;">`,
+                `Your OTP for the ride is: ${otp} Please share it with the driver to start the ride.`,
+            ],
+            table: {
+                data: [
+                    {item: 'Driver Name', info: driverName},
+                    {item: 'Car Number', info: carNumber},
+                    {item: 'Phone Number', info: phoneNumber},
+                ],
+                columns: {
+                    // Optionally, customize the column widths
+                    customWidth: {
+                        item: '20%',
+                        info: '80%'
+                    }
+                }
+            },
+            outro: "Need help, or have questions? Just reply to this email, we'd love to help.",
+        },
+    });
+};
+export { sendMail, emailVerificationMailgenContents, forgotPasswordMailgenContents,driverVerificationMailgenContents, rideBookingConfirmationMailgenContents,};
