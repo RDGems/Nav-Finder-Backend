@@ -59,3 +59,14 @@ export const verifyPayment = asyncHandler(async (req: AuthRequest, res: Response
     }
 
 });
+export const getCallBack=asyncHandler(async(req:Request,res:Response)=>{
+        // Razorpay sends the payment details as query parameters
+        const rideId=req.params.paymentId;
+        await Ride.findByIdAndUpdate(rideId,{paymentStatus:'success'})
+    
+        // TODO: Verify the payment using the Razorpay API and your secret key
+    
+        // Send a response back to Razorpay
+        res.status(200).send('Payment verification successful');
+
+})

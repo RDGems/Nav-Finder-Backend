@@ -163,6 +163,7 @@ userSchema.methods.generateAccessToken = async function () {
         accountType: this.accountType,
         AccountStatus: this.AccountStatus,
         isOnboarded: this.isOnboarded,
+        isDriver:this.isDriver
     };
     return Jwt.sign(payload, process.env.JWT_ACCESS_TOKEN_SECRET!, { expiresIn: process.env.JWT_ACCESS_EXPIRY });
 }
@@ -175,6 +176,7 @@ userSchema.methods.generateRefreshToken = async function () {
         accountType: this.accountType,
         AccountStatus: this.AccountStatus,
         isOnboarded: this.isOnboarded,
+        isDriver:this.isDriver
     };
     return Jwt.sign(payload, process.env.JWT_REFRESH_TOKEN_SECRET!, { expiresIn: process.env.JWT_REFRESH_EXPIRY });
 }

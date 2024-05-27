@@ -130,7 +130,7 @@ const bookRide = asyncHandler(async (req: AuthRequest, res: Response) => {
 
     const newRide = await Ride.create({
         user,
-        driver: driver._id, // Assign the random driver's id
+        driver: driver.driverDetail, // Assign the random driver's id
         pickupLocation,
         dropoffLocation,
         rideStatus: "requested",
@@ -156,45 +156,65 @@ const bookRide = asyncHandler(async (req: AuthRequest, res: Response) => {
 });
 
 // get all rides/activities
+// const getRides = asyncHandler(async (req: AuthRequest, res: Response) => {
+//     const userId = req.user?.id as string;
+//     if (!userId) {
+//         throw new ApiError(401, "Login First to continue");
+//     }
+//     const rides = await Ride.aggregate([
+//         { $match: { user: new mongoose.Types.ObjectId(userId) } },
+//         { $sort: { createdAt: -1 } },
+//         {
+//             $lookup: {
+//                 from: "drivers", // replace with your actual Driver collection name
+//                 localField: "driver",
+//                 foreignField: "_id",
+//                 as: "driver"
+//             }
+//         },
+//         { $unwind: "$driver" },
+//         {
+//             $lookup: {
+//                 from: "users", // replace with your actual User collection name
+//                 localField: "driver.driverDetail",
+//                 foreignField: "_id",
+//                 as: "driverDetail"
+//             }
+//         },
+//         { $unwind: "$driverDetail" },
+//         {
+//             $project: {
+//                 createdAt: 1,
+//                 totalFare: 1,
+//                 estimatedFare:1,
+//                 rideStatus: 1,
+//                 paymentStatus: 1,
+//                 pickupLocation: 1,
+//                 dropoffLocation: 1,
+//                 "driverDetail.email": 1,
+//                 "driverDetail.userName": 1
+//             }
+//         }, {
+//             $group: {
+//                 _id: "$rideStatus",
+//                 rides: { $push: "$$ROOT" }
+//             }
+//         }
+//     ]);
+//     const acceptedRides = rides.find(group => group._id === 'requested')?.rides || [];
+//     const requestedRides = rides.filter(group => group._id !== 'requested').flatMap(group => group.rides);
+//     return res.json(new ApiResponse(200, { acceptedRides, requestedRides }, "Successfully fetched rides"))
+// });
 const getRides = asyncHandler(async (req: AuthRequest, res: Response) => {
     const userId = req.user?.id as string;
+    const isDriver = req.user?.isDriver as boolean
     if (!userId) {
         throw new ApiError(401, "Login First to continue");
     }
     const rides = await Ride.aggregate([
-        { $match: { user: new mongoose.Types.ObjectId(userId) } },
+        { $match: isDriver ? { driver: new mongoose.Types.ObjectId(userId) }  : { user: new mongoose.Types.ObjectId(userId) } },
         { $sort: { createdAt: -1 } },
         {
-            $lookup: {
-                from: "drivers", // replace with your actual Driver collection name
-                localField: "driver",
-                foreignField: "_id",
-                as: "driver"
-            }
-        },
-        { $unwind: "$driver" },
-        {
-            $lookup: {
-                from: "users", // replace with your actual User collection name
-                localField: "driver.driverDetail",
-                foreignField: "_id",
-                as: "driverDetail"
-            }
-        },
-        { $unwind: "$driverDetail" },
-        {
-            $project: {
-                createdAt: 1,
-                totalFare: 1,
-                estimatedFare:1,
-                rideStatus: 1,
-                paymentStatus: 1,
-                pickupLocation: 1,
-                dropoffLocation: 1,
-                "driverDetail.email": 1,
-                "driverDetail.userName": 1
-            }
-        }, {
             $group: {
                 _id: "$rideStatus",
                 rides: { $push: "$$ROOT" }
@@ -203,7 +223,7 @@ const getRides = asyncHandler(async (req: AuthRequest, res: Response) => {
     ]);
     const acceptedRides = rides.find(group => group._id === 'requested')?.rides || [];
     const requestedRides = rides.filter(group => group._id !== 'requested').flatMap(group => group.rides);
-    return res.json(new ApiResponse(200, { acceptedRides, requestedRides }, "Successfully fetched rides"))
+    return res.json(new ApiResponse(200, { acceptedRides, requestedRides, isDriver }, "Successfully fetched rides"))
 });
 // cancel a ride
 const cancelRide = asyncHandler(async (req: AuthRequest, res: Response) => {
@@ -216,7 +236,7 @@ const cancelRide = asyncHandler(async (req: AuthRequest, res: Response) => {
     }
     const ride = await Ride.findByIdAndUpdate(rideId, { rideStatus: type, cancelledBy: req.user?.id }, { new: true });
 
-return res.json(new ApiResponse(200, ride, `Successfully ${type} ride`));
+    return res.json(new ApiResponse(200, ride, `Successfully ${type} ride`));
 })
 
 export { bookRide, afterLocation, getRides, cancelRide };
