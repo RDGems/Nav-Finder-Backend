@@ -114,9 +114,9 @@ const createDriver = asyncHandler(async (req: AuthRequest, res: Response) => {
         if (!tempDriver) {
             throw new ApiError(400, "Driver not found", []);
         }
-        if (tempDriver.stage != 'driverPhoto') {
-            throw new ApiError(400, "Please complete the previous steps", []);
-        }
+        // if (tempDriver.stage != 'driverPhoto') {
+        //     throw new ApiError(400, "Please complete the previous steps", []);
+        // }
         const existingDriverId = await Driver.findOne({ driverDetail: userId });
         if (existingDriverId) {
             throw new ApiError(400, "Driver already exists", []);
