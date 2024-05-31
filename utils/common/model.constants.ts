@@ -5,7 +5,8 @@ export enum AccountType {
 }
 export enum Gender {
     MALE = "Male",
-    FEMALE = "Female"
+    FEMALE = "Female",
+    OTHERS= "Others"
 }
 export enum AccountStatus {
     ACTIVE = 'Active',

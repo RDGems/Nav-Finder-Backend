@@ -145,14 +145,19 @@ const userSchema = new Schema({
 
 // generate hashed password
 userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) next();
-    this.password = await bcrypt.hash(this.password, 10);
+    if (this.isModified("password")) {
+        this.password = await bcrypt.hash(this.password, 10);
+    }
     next();
 });
 // validate password
 userSchema.methods.validatePassword = async function (password: string) {
-    return await bcrypt.compare(password, this.password);
-}
+    const match = await bcrypt.compare(password, this.password);
+    console.log(`Entered password: ${password}`);
+    console.log(`Stored hashed password: ${this.password}`);
+    console.log(`Passwords match: ${match}`);
+    return match;
+};
 
 // Generate AccessToken
 userSchema.methods.generateAccessToken = async function () {

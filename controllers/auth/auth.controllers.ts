@@ -368,7 +368,6 @@ const changePassword = asyncHandler(async (req: AuthRequest, res: Response) => {
     if (!user) {
         throw new ApiError(404, "User not found", []);
     }
-    console.log(user);
     const isValid = await user.validatePassword(oldPassword);
     if (!isValid) {
         throw new ApiError(401, "Invalid Old Password", []);
