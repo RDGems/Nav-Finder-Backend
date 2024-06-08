@@ -40,7 +40,6 @@ export const verifyPayment = asyncHandler(async (req: AuthRequest, res: Response
         throw new ApiError(400, 'Signature mismatch');
     }
     else{
-        console.log('Payment verified');
         const payment = new Payment({
             user: req.user?.id, // Assuming you have the user's ID in req.user._id
             orderId: RazorpayOrderId,

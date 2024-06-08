@@ -31,7 +31,7 @@ const rideSchema = new Schema({
     },
     paymentMethod: { type: String, enum: ['credit_card', 'cash'], default: 'cash' },
     totalFare: { type: Number },
-    paymentStatus: { type: String, enum: ['pending', 'completed'], default: 'pending' },
+    paymentStatus: { type: String, enum: ['pending', 'success'], default: 'pending' },
     rideRequestTime: { type: Date, default: Date.now },
     rideAcceptTime: { type: Date },
     rideStartTime: { type: Date },

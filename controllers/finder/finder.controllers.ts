@@ -111,7 +111,7 @@ const createCarNumber = (pickupLocation: string) => {
 }
 // book a ride
 const bookRide = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { pickupLocation, dropoffLocation, estimatedFare, vehicleType, paymentMethod, distance, duration } = req.body;
+    const { pickupLocation, dropoffLocation, estimatedFare, vehicleType, paymentMethod, distance, duration ,paymentStatus} = req.body;
     const user = req.user?.id;
     if (!user) {
         throw new ApiError(401, "Login First to continue");
@@ -134,6 +134,7 @@ const bookRide = asyncHandler(async (req: AuthRequest, res: Response) => {
         pickupLocation,
         dropoffLocation,
         rideStatus: "requested",
+        paymentStatus:paymentStatus || "pending",
         estimatedFare,
         vehicleType,
         paymentMethod,
